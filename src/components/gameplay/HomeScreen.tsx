@@ -27,7 +27,8 @@ const HOME_ITEMS: MenuItem[] = [
 ];
 
 export function HomeScreen({ navigate }: Props) {
-  const { dispatch } = useGame();
+  const { state, dispatch } = useGame();
+  const isAdmin = state.phase === "AUTHENTICATED";
   const [view, setView] = useState<HomeView>("menu");
   const [showPassword, setShowPassword] = useState(false);
 
@@ -45,7 +46,10 @@ export function HomeScreen({ navigate }: Props) {
       <MenuList
         items={HOME_ITEMS}
         onSelect={(item) => {
-          if (item.id === "admin-login") setShowPassword(true);
+          if (item.id === "admin-login") {
+            if (isAdmin) navigate("root");
+            else setShowPassword(true);
+          }
           if (item.id === "guest") navigate("root");
           if (item.id === "settings") setView("settings");
         }}
