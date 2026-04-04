@@ -1,9 +1,15 @@
 import { useState, useRef, useEffect } from "react";
 import { sanitizePassword } from "@/lib/format";
-import { playInterface } from "@/lib/audio";
-import { LABEL_RETRY_IN, LABEL_ATTEMPTS_LEFT, ARIA_ENTER_PASSWORD } from "@/data/labels";
+import { playInterface, stopInterface } from "@/lib/audio";
+import {
+  LABEL_WRONG_PASSWORD,
+  LABEL_RETRY_IN,
+  LABEL_ATTEMPTS_LEFT,
+  ARIA_ENTER_PASSWORD,
+} from "@/data/labels";
 
 interface PasswordInputProps {
+  validate: (password: string) => boolean;
   onSubmit: (password: string) => void;
   onCancel?: () => void;
   maxAttempts?: number;
@@ -11,13 +17,14 @@ interface PasswordInputProps {
 }
 
 export function PasswordInput({
+  validate,
   onSubmit,
   onCancel,
   maxAttempts = 3,
   lockoutDuration = 5,
 }: PasswordInputProps) {
   const [value, setValue] = useState("");
-  const [attempts, setAttempts] = useState(0);
+  const [wrongAttempts, setWrongAttempts] = useState(0);
   const [locked, setLocked] = useState(false);
   const [lockRemaining, setLockRemaining] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -26,6 +33,12 @@ export function PasswordInput({
     inputRef.current?.focus();
   }, []);
 
+  // Stop geiger on unmount (cancel or navigate away)
+  useEffect(() => {
+    return () => stopInterface("geiger-counter");
+  }, []);
+
+  // Lockout countdown
   useEffect(() => {
     if (!locked) return;
     setLockRemaining(lockoutDuration);
@@ -34,7 +47,7 @@ export function PasswordInput({
         if (r <= 1) {
           clearInterval(interval);
           setLocked(false);
-          setAttempts(0);
+          setWrongAttempts(0);
           return 0;
         }
         return r - 1;
@@ -48,48 +61,66 @@ export function PasswordInput({
     if (locked || !value) return;
 
     const sanitized = sanitizePassword(value);
-    const newAttempts = attempts + 1;
-    setAttempts(newAttempts);
     setValue("");
 
-    if (newAttempts >= maxAttempts) {
-      setLocked(true);
+    if (validate(sanitized)) {
+      stopInterface("geiger-counter");
+      onSubmit(sanitized);
       return;
     }
 
-    onSubmit(sanitized);
+    const newWrong = wrongAttempts + 1;
+    setWrongAttempts(newWrong);
+
+    // Start geiger on first wrong attempt; it keeps looping until correct
+    if (newWrong === 1) {
+      playInterface("geiger-counter");
+    }
+
+    if (newWrong >= maxAttempts) {
+      setLocked(true);
+    }
   }
+
+  const attemptsLeft = maxAttempts - wrongAttempts;
 
   if (locked) {
     return (
-      <p className="font-terminal text-(--color-accent)" role="alert">
-        {LABEL_RETRY_IN(lockRemaining)}
-      </p>
+      <div className="font-terminal space-y-1">
+        <p className="text-(--color-accent)" role="alert">
+          {LABEL_RETRY_IN(lockRemaining)}
+        </p>
+      </div>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex items-center gap-2">
-      <span className="font-terminal text-(--color-fg)">&gt;</span>
-      <input
-        ref={inputRef}
-        type="password"
-        value={value}
-        onChange={(e) => setValue(sanitizePassword(e.target.value))}
-        onKeyDown={(e) => {
-          if (e.key === "Escape") { onCancel?.(); return; }
-          playInterface("keystroke");
-        }}
-        className="bg-transparent font-terminal text-(--color-fg) outline-none caret-(--color-fg) border-b border-(--color-fg) w-40"
-        aria-label={ARIA_ENTER_PASSWORD}
-        autoComplete="off"
-        spellCheck={false}
-      />
-      {attempts > 0 && (
-        <span className="font-terminal text-xs text-(--color-accent)">
-          {LABEL_ATTEMPTS_LEFT(maxAttempts - attempts)}
-        </span>
+    <div className="font-terminal space-y-1">
+      <form onSubmit={handleSubmit} className="flex items-center gap-2">
+        <span className="text-(--color-fg)">&gt;</span>
+        <input
+          ref={inputRef}
+          type="password"
+          value={value}
+          onChange={(e) => setValue(sanitizePassword(e.target.value))}
+          onKeyDown={(e) => {
+            if (e.key === "Escape") { onCancel?.(); return; }
+            playInterface("keystroke");
+          }}
+          className="bg-transparent text-(--color-fg) outline-none caret-(--color-fg) border-b border-(--color-fg) w-40"
+          aria-label={ARIA_ENTER_PASSWORD}
+          autoComplete="off"
+          spellCheck={false}
+        />
+        {wrongAttempts > 0 && attemptsLeft > 0 && (
+          <span className="text-xs text-(--color-accent)">
+            {LABEL_ATTEMPTS_LEFT(attemptsLeft)}
+          </span>
+        )}
+      </form>
+      {wrongAttempts > 0 && (
+        <p className="text-xs text-(--color-accent)">{LABEL_WRONG_PASSWORD}</p>
       )}
-    </form>
+    </div>
   );
 }

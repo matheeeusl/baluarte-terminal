@@ -34,19 +34,28 @@ interface ScreenBounds {
 interface Props {
   children: React.ReactNode;
   onKnob2Click?: () => void;
+  knob2Disabled?: boolean;
 }
 
-export function TerminalFrame({ children, onKnob2Click }: Props) {
+export function TerminalFrame({ children, onKnob2Click, knob2Disabled = false }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [bounds, setBounds] = useState<ScreenBounds>(FALLBACK);
 
   useEffect(() => {
+    const knob2 = containerRef.current?.querySelector<SVGElement>("#knob2");
+    if (!knob2) return;
+    knob2.style.cursor = knob2Disabled ? "not-allowed" : "pointer";
+    knob2.style.opacity = knob2Disabled ? "0.4" : "1";
+  }, [knob2Disabled]);
+
+  useEffect(() => {
     const knob2 = containerRef.current?.querySelector<Element>("#knob2");
     if (knob2 && onKnob2Click) {
-      knob2.addEventListener("click", onKnob2Click);
-      return () => knob2.removeEventListener("click", onKnob2Click);
+      const handler = () => { if (!knob2Disabled) onKnob2Click(); };
+      knob2.addEventListener("click", handler);
+      return () => knob2.removeEventListener("click", handler);
     }
-  }, [onKnob2Click]);
+  }, [onKnob2Click, knob2Disabled]);
 
   useEffect(() => {
     function computeBounds() {

@@ -2,7 +2,7 @@
 // Edit here to update every screen at once.
 
 // --- Terminal identity ---
-export const TERMINAL_BRAND = "██ Ouroboros Defense Systems (ODS)";
+export const TERMINAL_BRAND_TEXT = "Ouroboros Defense Systems (ODS)";
 export const TERMINAL_BRAND_FULL =
   "Ouroboros Defense Systems (ODS) - Unidade Baluarte 02";
 export const FACILITY_NAME = "Unidade Baluarte 02";
@@ -10,6 +10,14 @@ export const WELCOME_MESSAGE = `Bem-vindo a ${FACILITY_NAME}...`;
 
 // --- Boot screen ---
 export const LABEL_LOADING_OS = "CARREGANDO SISTEMA OPERACIONAL...";
+
+// --- Shutdown screen ---
+export const SHUTDOWN_STEPS = [
+  "Encerrando processos ativos...",
+  "Limpando cache...",
+  "Resetando configurações...",
+  "Sistema desligado.",
+];
 
 // --- Home menu ---
 export const LABEL_ADMIN_LOGIN = "Login Administrador";
@@ -41,6 +49,9 @@ export const LABEL_CURRENT_PATH = "Local";
 export const LABEL_LOCKED = "[BLOQUEADO]";
 export const LABEL_JANITOR_GRANT = "Conceder Acesso ao Zelador";
 export const LABEL_JANITOR_REVOKE = "Revogar Acesso ao Zelador";
+
+// --- Password input ---
+export const LABEL_WRONG_PASSWORD = "Senha incorreta.";
 
 // --- Password input ---
 export const LABEL_ACCESS_DENIED = "ACESSO NEGADO";

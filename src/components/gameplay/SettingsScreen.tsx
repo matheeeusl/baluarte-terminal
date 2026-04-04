@@ -1,6 +1,5 @@
 import { useGame } from "@/context/GameContext";
 import {
-  TERMINAL_BRAND,
   LABEL_SETTINGS_TITLE,
   LABEL_SELECT_PALETTE,
   LABEL_BACK,
@@ -8,6 +7,7 @@ import {
   PALETTE_LABELS,
 } from "@/data/labels";
 import { MenuList } from "@/components/ui/MenuList";
+import { TerminalBrand } from "@/components/ui/TerminalBrand";
 import { PALETTES } from "@/lib/theme";
 import type { ThemePalette } from "@/types";
 import type { MenuItem } from "@/components/ui/MenuList";
@@ -35,7 +35,7 @@ export function SettingsScreen({ onBack }: Props) {
   return (
     <div className="flex h-full flex-col gap-4 p-10 font-terminal">
       <h1 className="text-lg text-(--color-accent)">
-        {TERMINAL_BRAND}
+        <TerminalBrand />
       </h1>
       <p className="text-(--color-fg)">{LABEL_SETTINGS_TITLE}</p>
       <hr className="border-(--color-muted)" />

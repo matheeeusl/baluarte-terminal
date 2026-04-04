@@ -1,13 +1,14 @@
 import { useState } from "react";
 import { useGame } from "@/context/GameContext";
+import { ADMIN_PASSWORD } from "@/context/GameReducer";
 import {
-  TERMINAL_BRAND,
   WELCOME_MESSAGE,
   LABEL_ADMIN_LOGIN,
   LABEL_GUEST_ACCESS,
   LABEL_SETTINGS,
   LABEL_CHOOSE_OPTION,
 } from "@/data/labels";
+import { TerminalBrand } from "@/components/ui/TerminalBrand";
 import { MenuList } from "@/components/ui/MenuList";
 import { PasswordInput } from "@/components/ui/PasswordInput";
 import { SettingsScreen } from "@/components/gameplay/SettingsScreen";
@@ -37,7 +38,7 @@ export function HomeScreen({ navigate }: Props) {
   return (
     <div className="flex h-full flex-col gap-4 p-10 font-terminal">
       <h1 className="text-lg text-(--color-accent)">
-        {TERMINAL_BRAND}
+        <TerminalBrand />
       </h1>
       <p className="text-(--color-fg)">{WELCOME_MESSAGE}</p>
       <p className="text-sm text-(--color-fg)">{LABEL_CHOOSE_OPTION}</p>
@@ -52,6 +53,7 @@ export function HomeScreen({ navigate }: Props) {
       {showPassword && (
         <div className="mt-auto">
           <PasswordInput
+            validate={(pw) => pw.toUpperCase() === ADMIN_PASSWORD.toUpperCase()}
             onSubmit={(pw) => {
               dispatch({ type: "LOGIN_ADMIN", password: pw });
               setShowPassword(false);

@@ -2,31 +2,52 @@ import { useState, useEffect } from "react";
 import { useGame } from "@/context/GameContext";
 import { NavigationProvider } from "@/context/NavigationContext";
 import { Loading } from "@/components/core/Loading";
+import { Shutdown } from "@/components/core/Shutdown";
 import { HomeScreen } from "@/components/gameplay/HomeScreen";
 import { FolderView } from "@/components/gameplay/FolderView";
 import { useFileSystem } from "@/hooks/useFileSystem";
 import { playInterface } from "@/lib/audio";
 
-export function Terminal() {
+interface Props {
+  onTransitionEnd?: () => void;
+  onPowerOn?: () => void;
+}
+
+export function Terminal({ onTransitionEnd, onPowerOn }: Props) {
   const { state, dispatch } = useGame();
   const fileSystem = useFileSystem();
   const { pathStack } = fileSystem;
   const [bootDone, setBootDone] = useState(false);
+  const [shutdownDone, setShutdownDone] = useState(true);
 
   useEffect(() => {
     if (state.power) {
       setBootDone(false);
       playInterface("startup");
     } else {
+      setShutdownDone(false);
       playInterface("off");
     }
   }, [state.power]);
 
   if (!state.power) {
+    if (!shutdownDone) {
+      return (
+        <Shutdown
+          onComplete={() => {
+            setShutdownDone(true);
+            onTransitionEnd?.();
+          }}
+        />
+      );
+    }
     return (
       <div className="flex h-full items-center justify-center">
         <button
-          onClick={() => dispatch({ type: "POWER_ON" })}
+          onClick={() => {
+            onPowerOn?.();
+            dispatch({ type: "POWER_ON" });
+          }}
           className="border border-(--color-fg) px-6 py-3 font-terminal text-(--color-fg) hover:bg-(--color-muted)"
         >
           POWER ON
@@ -40,6 +61,7 @@ export function Terminal() {
       <Loading
         onComplete={() => {
           setBootDone(true);
+          onTransitionEnd?.();
           dispatch({ type: "NAVIGATE", nodeId: "home" });
         }}
       />

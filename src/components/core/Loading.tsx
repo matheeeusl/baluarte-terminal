@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { TERMINAL_BRAND_FULL, LABEL_LOADING_OS } from "@/data/labels";
+import { LABEL_LOADING_OS } from "@/data/labels";
+import { TerminalBrand } from "@/components/ui/TerminalBrand";
 
 interface LoadingProps {
   onComplete: () => void;
@@ -31,7 +32,7 @@ export function Loading({ onComplete, duration = 1500 }: LoadingProps) {
   return (
     <div className="flex h-full flex-col items-center justify-center gap-4 p-8 font-terminal">
       <p className="text-lg text-(--color-accent)">
-        {TERMINAL_BRAND_FULL}
+        <TerminalBrand full />
       </p>
       <p className="text-(--color-fg)">{LABEL_LOADING_OS}</p>
       <div className="w-full max-w-xs border border-(--color-fg) p-1">

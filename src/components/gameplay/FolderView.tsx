@@ -5,8 +5,10 @@ import { StatusBlock } from "@/components/ui/StatusBlock";
 import { PasswordInput } from "@/components/ui/PasswordInput";
 import { AudioPlayer } from "@/components/gameplay/AudioPlayer";
 import { formatPath } from "@/lib/format";
+import { TerminalBrand } from "@/components/ui/TerminalBrand";
+import { fileTree } from "@/data/fileTree";
+import type { Folder } from "@/types";
 import {
-  TERMINAL_BRAND,
   LABEL_CHOOSE_OPTION,
   LABEL_LOCKED,
   LABEL_BACK,
@@ -18,6 +20,16 @@ import type { AudioFile, FileNode, InteractableFile, StatusFile } from "@/types"
 import type { useFileSystem } from "@/hooks/useFileSystem";
 
 type FileSystem = ReturnType<typeof useFileSystem>;
+
+function findFolder(id: string, node: Folder): Folder | null {
+  if (node.id === id) return node;
+  for (const child of node.children) {
+    if (child.type !== "folder") continue;
+    const found = findFolder(id, child);
+    if (found) return found;
+  }
+  return null;
+}
 
 const ICONS: Record<string, string> = {
   folder: "📁",
@@ -102,7 +114,7 @@ export function FolderView({ fileSystem }: Props) {
   return (
     <div className="flex h-full flex-col gap-3 p-10 font-terminal overflow-auto">
       <h1 className="text-base text-(--color-accent)">
-        {TERMINAL_BRAND}
+        <TerminalBrand />
       </h1>
       <StatusBlock currentPath={formatPath(pathStack)} />
 
@@ -183,6 +195,10 @@ export function FolderView({ fileSystem }: Props) {
       {showPassword && (
         <div className="mt-auto">
           <PasswordInput
+            validate={(pw) => {
+              const folder = findFolder(showPassword, fileTree);
+              return folder?.password?.toUpperCase() === pw.toUpperCase();
+            }}
             onSubmit={(pw) => {
               dispatch({
                 type: "UNLOCK_FOLDER",
