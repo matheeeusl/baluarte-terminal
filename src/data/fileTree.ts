@@ -1,5 +1,10 @@
 import type { Folder } from "@/types";
 
+const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
+function audio(path: string) {
+  return `${BASE}${path}`;
+}
+
 // Root file tree — populate as the campaign is designed.
 // Each folder can contain subfolders, audio files, interactables, and status files.
 // adminOnly: true → invisible to guests, visible only after admin login.
@@ -57,7 +62,7 @@ export const fileTree: Folder = {
           type: "audio",
           id: "set1-audio1",
           name: "Audio Log 1",
-          src: "/assets/audio/cartao_entrada.wav",
+          src: audio("/assets/audio/cartao_entrada.wav"),
           duration: 95,
         },
       ],

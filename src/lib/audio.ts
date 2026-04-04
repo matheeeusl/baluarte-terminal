@@ -2,11 +2,13 @@ import { Howl } from "howler";
 
 export type InterfaceSound = "startup" | "off" | "keystroke" | "crt-hum";
 
+const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
+
 const SRCS: Record<InterfaceSound, string> = {
-  startup: "/assets/audio/interface/beep_startup.wav",
-  off: "/assets/audio/interface/beep_off.wav",
-  keystroke: "/assets/audio/interface/mechanical-switch.wav",
-  "crt-hum": "/assets/audio/interface/CRT_hum.wav",
+  startup: `${BASE}/assets/audio/interface/beep_startup.wav`,
+  off: `${BASE}/assets/audio/interface/beep_off.wav`,
+  keystroke: `${BASE}/assets/audio/interface/mechanical-switch.wav`,
+  "crt-hum": `${BASE}/assets/audio/interface/CRT_hum.wav`,
 };
 
 const cache = new Map<InterfaceSound, Howl>();
