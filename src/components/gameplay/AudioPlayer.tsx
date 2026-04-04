@@ -1,7 +1,13 @@
 import { useState, useEffect, useRef } from "react";
 import { Howl } from "howler";
 import { formatDuration } from "@/lib/format";
-import { ARIA_PLAY_AUDIO, ARIA_STOP_AUDIO, LABEL_TRANSCRIPT } from "@/data/labels";
+import {
+  ARIA_PLAY_AUDIO,
+  ARIA_PAUSE_AUDIO,
+  ARIA_STOP_AUDIO,
+  ARIA_SEEK,
+  LABEL_TRANSCRIPT,
+} from "@/data/labels";
 import type { AudioFile } from "@/types";
 
 interface AudioPlayerProps {
@@ -14,6 +20,7 @@ export function AudioPlayer({ file, onStop }: AudioPlayerProps) {
   const [elapsed, setElapsed] = useState(0);
   const howlRef = useRef<Howl | null>(null);
   const rafRef = useRef<number>(0);
+  const progressRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     howlRef.current = new Howl({
@@ -44,6 +51,12 @@ export function AudioPlayer({ file, onStop }: AudioPlayerProps) {
     rafRef.current = requestAnimationFrame(tick);
   }
 
+  function handlePause() {
+    howlRef.current?.pause();
+    setPlaying(false);
+    cancelAnimationFrame(rafRef.current);
+  }
+
   function handleStop() {
     howlRef.current?.stop();
     setPlaying(false);
@@ -52,34 +65,61 @@ export function AudioPlayer({ file, onStop }: AudioPlayerProps) {
     onStop?.();
   }
 
+  function handleSeek(e: React.MouseEvent<HTMLDivElement>) {
+    const bar = progressRef.current;
+    if (!bar || file.duration <= 0) return;
+    const { left, width } = bar.getBoundingClientRect();
+    const ratio = Math.max(0, Math.min(1, (e.clientX - left) / width));
+    const seekTo = ratio * file.duration;
+    howlRef.current?.seek(seekTo);
+    setElapsed(seekTo);
+  }
+
   const progress = file.duration > 0 ? (elapsed / file.duration) * 100 : 0;
 
   return (
     <div className="font-terminal text-(--color-fg) space-y-2">
       <p className="text-sm text-(--color-accent)">{file.name}</p>
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2">
+        {/* Play / Pause */}
         <button
-          onClick={playing ? handleStop : handlePlay}
+          onClick={playing ? handlePause : handlePlay}
           className="border border-(--color-fg) px-3 py-1 text-xs hover:bg-(--color-muted)"
-          aria-label={playing ? ARIA_STOP_AUDIO : ARIA_PLAY_AUDIO}
+          aria-label={playing ? ARIA_PAUSE_AUDIO : ARIA_PLAY_AUDIO}
         >
-          {playing ? "■ STOP" : "▶ PLAY"}
+          {playing ? "⏸ PAUSA" : "▶ PLAY"}
+        </button>
+        {/* Stop */}
+        <button
+          onClick={handleStop}
+          className="border border-(--color-fg) px-3 py-1 text-xs hover:bg-(--color-muted)"
+          aria-label={ARIA_STOP_AUDIO}
+        >
+          ■ STOP
         </button>
         <span className="text-xs">
           {formatDuration(elapsed)} / {formatDuration(file.duration)}
         </span>
       </div>
-      <div className="w-full border border-(--color-muted) h-1">
+
+      {/* Seekable progress bar */}
+      <div
+        ref={progressRef}
+        role="progressbar"
+        aria-label={ARIA_SEEK}
+        aria-valuenow={Math.round(elapsed)}
+        aria-valuemin={0}
+        aria-valuemax={file.duration}
+        onClick={handleSeek}
+        className="w-full border border-(--color-muted) h-2 cursor-pointer relative"
+      >
         <div
-          className="h-full bg-(--color-fg)"
+          className="h-full bg-(--color-fg) pointer-events-none"
           style={{ width: `${progress}%` }}
-          role="progressbar"
-          aria-valuenow={Math.round(elapsed)}
-          aria-valuemin={0}
-          aria-valuemax={file.duration}
         />
       </div>
-      {file.transcript && !playing && (
+
+      {file.transcript && (
         <details className="text-xs text-(--color-muted)">
           <summary className="cursor-pointer hover:text-(--color-fg)">
             {LABEL_TRANSCRIPT}

@@ -38,12 +38,19 @@ export const PALETTE_LABELS = {
 
 // --- Status block ---
 export const LABEL_STATUS_ONLINE = "Status: Online";
-export const LABEL_USER_ADMIN = "Admin";
+export const LABEL_USER_ADMIN = "K♡JAdmin";
 export const LABEL_USER_GUEST = "Visitante";
 export const LABEL_JANITOR = "Zelador";
 export const LABEL_JANITOR_ACTIVE = "Ativo";
 export const LABEL_JANITOR_CONTAINED = "Contido";
 export const LABEL_CURRENT_PATH = "Local";
+
+export const STATUS_ROWS_STATIC = [
+  { label: "Status do Terminal",         value: "Online"          },
+  { label: "Status da Rede",             value: "Online"          },
+  { label: "Tempo de Bateria estimado",  value: "3,7799e+7 Horas" },
+  { label: "Último diagnóstico de rede", value: "!Error!"         },
+] as const;
 
 // --- Folder view ---
 export const LABEL_LOCKED = "[BLOQUEADO]";
@@ -63,5 +70,7 @@ export const ARIA_ENTER_PASSWORD = "Digite a senha";
 
 // --- Audio player ---
 export const ARIA_PLAY_AUDIO = "Reproduzir áudio";
+export const ARIA_PAUSE_AUDIO = "Pausar áudio";
 export const ARIA_STOP_AUDIO = "Parar áudio";
 export const LABEL_TRANSCRIPT = "Transcrição";
+export const ARIA_SEEK = "Avançar para posição";

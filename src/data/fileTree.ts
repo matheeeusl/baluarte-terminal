@@ -67,7 +67,7 @@ export const fileTree: Folder = {
           type: "audio",
           id: "set1-audio1",
           name: "Audio Log 1",
-          src: audio("/assets/audio/cartao_entrada.wav"),
+          src: audio("/assets/audio/FCs2.wav"),
           duration: 95,
         },
       ],
