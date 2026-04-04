@@ -31,6 +31,7 @@ export default defineConfig({
       },
     }),
   ],
+  base: "/baluarte-terminal/",
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
