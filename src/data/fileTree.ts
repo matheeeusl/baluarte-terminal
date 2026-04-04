@@ -13,6 +13,10 @@ function audio(path: string) {
   return `${BASE}${path}`;
 }
 
+function images(path: string) {
+  return `${BASE}${path}`;
+}
+
 // Root file tree — populate as the campaign is designed.
 // Each folder can contain subfolders, audio files, interactables, and status files.
 // adminOnly: true → invisible to guests, visible only after admin login.
@@ -44,10 +48,26 @@ export const fileTree: Folder = {
       type: "folder",
       id: "map",
       name: "Mapa",
-      password: null,
+      password: "asdfasdfasdf",
       janitorAccess: false,
       adminOnly: false,
-      children: [],
+      children: [
+        {
+          type: "image",
+          id: "map-setores",
+          name: "Mapa dos Setores",
+          src: images("/assets/imagens/Mapa_1.png"),
+          alt: "Mapa ilustrado dos setores da instalação",
+          caption: TEXT_EMAIL_VAZADO_2,
+        },
+        {
+          type: "image",
+          id: "map-setores-janela",
+          name: "Mapa dos Setores (com janela)",
+          src: images("/assets/imagens/Mapa_2.png"),
+          alt: "Mapa ilustrado dos setores da instalação, visto através de uma janela com grades",
+        },
+      ],
     },
     {
       type: "folder",

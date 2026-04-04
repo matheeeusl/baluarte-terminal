@@ -48,13 +48,23 @@ export interface EmailFile {
   attachment?: AudioFile;
 }
 
+export interface ImageFile {
+  type: "image";
+  id: string;
+  name: string;
+  src: string;
+  alt?: string;
+  caption?: string;
+  adminOnly?: boolean;
+}
+
 export interface JanitorControlFile {
   type: "janitor-control";
   id: string;
   name: string;
 }
 
-export type FileNode = Folder | AudioFile | InteractableFile | StatusFile | EmailFile | JanitorControlFile;
+export type FileNode = Folder | AudioFile | InteractableFile | StatusFile | EmailFile | ImageFile | JanitorControlFile;
 
 export interface PasswordGate {
   folderId: string;

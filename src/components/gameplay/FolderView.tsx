@@ -17,7 +17,7 @@ import {
   LABEL_PROCESSING,
 } from "@/data/labels";
 import type { MenuItem } from "@/components/ui/MenuList";
-import type { AudioFile, EmailFile, FileNode, InteractableFile, StatusFile } from "@/types";
+import type { AudioFile, EmailFile, FileNode, ImageFile, InteractableFile, StatusFile } from "@/types";
 import type { useFileSystem } from "@/hooks/useFileSystem";
 
 type FileSystem = ReturnType<typeof useFileSystem>;
@@ -38,6 +38,7 @@ const ICONS: Record<string, string> = {
   interactable: "⚙",
   status: "📄",
   email: "✉",
+  image: "🖼",
   "janitor-control": "👁",
 };
 
@@ -54,6 +55,7 @@ export function FolderView({ fileSystem }: Props) {
   const [autoPlayAudio, setAutoPlayAudio] = useState(false);
   const [activeStatus, setActiveStatus] = useState<StatusFile | null>(null);
   const [activeEmail, setActiveEmail] = useState<EmailFile | null>(null);
+  const [activeImage, setActiveImage] = useState<ImageFile | null>(null);
   const [emailAudio, setEmailAudio] = useState<AudioFile | null>(null);
   const [processing, setProcessing] = useState<Set<string>>(new Set());
 
@@ -64,6 +66,7 @@ export function FolderView({ fileSystem }: Props) {
     setActiveStatus(null);
     setActiveEmail(null);
     setEmailAudio(null);
+    setActiveImage(null);
   }, [currentFolder.id]);
 
   const PROCESSING_DELAY = 1500;
@@ -84,6 +87,7 @@ export function FolderView({ fileSystem }: Props) {
     if (node.type === "folder" && node.adminOnly && !isAdmin) return false;
     if (node.type === "status" && node.adminOnly && !isAdmin) return false;
     if (node.type === "email" && node.adminOnly && !isAdmin) return false;
+    if (node.type === "image" && node.adminOnly && !isAdmin) return false;
     return true;
   });
 
@@ -219,6 +223,14 @@ export function FolderView({ fileSystem }: Props) {
             return;
           }
 
+          if (node.type === "image") {
+            setActiveImage(activeImage?.id === node.id ? null : node);
+            setActiveStatus(null);
+            setActiveEmail(null);
+            setActiveAudio(null);
+            return;
+          }
+
           if (node.type === "email") {
             const next = activeEmail?.id === node.id ? null : node;
             setActiveEmail(next);
@@ -257,6 +269,19 @@ export function FolderView({ fileSystem }: Props) {
                 </button>
               )}
             </div>
+          )}
+        </div>
+      )}
+      {activeImage && (
+        <div className="mt-auto border-t border-(--color-muted) pt-3 text-sm text-(--color-fg) font-terminal space-y-3">
+          <p className="text-(--color-accent)">{activeImage.name}</p>
+          <img
+            src={activeImage.src}
+            alt={activeImage.alt ?? activeImage.name}
+            className="w-full object-contain border border-(--color-muted)"
+          />
+          {activeImage.caption && (
+            <p className="whitespace-pre-wrap">{activeImage.caption}</p>
           )}
         </div>
       )}
