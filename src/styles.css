@@ -1,0 +1,141 @@
+@import "tailwindcss";
+
+/* Design tokens */
+:root {
+  --color-bg: #0a0a0a;
+  --color-fg: #33ff33;
+  --color-accent: #66ff66;
+  --color-muted: #1a3a1a;
+
+  --font-terminal: "Share Tech Mono", monospace;
+  --font-size-base: 16px;
+  --font-size-sm: 14px;
+  --font-size-lg: 20px;
+  --line-height: 1.6;
+
+  --timing-typewriter: 40ms;
+  --timing-scanline: 8s;
+  --timing-flicker: 0.15s;
+  --timing-glitch: 100ms;
+  --timing-boot: 1500ms;
+  --timing-lockout: 5000ms;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-terminal);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height);
+  margin: 0;
+  padding: 0;
+}
+
+.font-terminal {
+  font-family: var(--font-terminal);
+}
+
+/* CRT scanlines */
+.crt-scanlines {
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.15) 2px,
+    rgba(0, 0, 0, 0.15) 4px
+  );
+  pointer-events: none;
+}
+
+/* CRT vignette */
+.crt-vignette {
+  background: radial-gradient(
+    ellipse at center,
+    transparent 60%,
+    rgba(0, 0, 0, 0.7) 100%
+  );
+  pointer-events: none;
+}
+
+/* CRT flicker */
+@keyframes crt-flicker {
+  0%, 100% { opacity: 1; }
+  92% { opacity: 1; }
+  93% { opacity: 0.85; }
+  94% { opacity: 1; }
+  96% { opacity: 0.9; }
+  97% { opacity: 1; }
+}
+
+.crt-flicker {
+  animation: crt-flicker var(--timing-flicker) infinite;
+  background: transparent;
+  pointer-events: none;
+}
+
+/* Janitor screen flicker */
+@keyframes janitor-flicker {
+  0% { opacity: 1; }
+  10% { opacity: 0.6; }
+  20% { opacity: 1; }
+  30% { opacity: 0.8; }
+  40% { opacity: 1; }
+  50% { opacity: 0.5; }
+  60% { opacity: 1; }
+  70% { opacity: 0.9; }
+  80% { opacity: 1; }
+  90% { opacity: 0.7; }
+  100% { opacity: 1; }
+}
+
+.crt-janitor-flicker {
+  animation: janitor-flicker var(--timing-glitch) steps(1, end) forwards;
+  background: rgba(0, 0, 0, 0.3);
+  pointer-events: none;
+}
+
+/* SVG knob rotation — transform-box: fill-box makes transform-origin relative
+   to the element's own bounding box, not the SVG viewport.
+   knob1: only the indicator layer rotates; the outer shell stays static,
+   creating the illusion of the whole knob turning. */
+#knob1-indicator {
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: rotate(var(--knob1-rotation, 0deg));
+  transition: transform 0.3s ease;
+}
+
+#knob2 {
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: rotate(var(--knob2-rotation, 0deg));
+  transition: transform 0.3s ease;
+  pointer-events: all;
+  cursor: pointer;
+}
+
+/* Responsive: hide below 768px */
+@media (max-width: 767px) {
+  body > #root {
+    display: none;
+  }
+
+  body::after {
+    content: "Please rotate your device or use a wider screen.";
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    inset: 0;
+    background: #0a0a0a;
+    color: #33ff33;
+    font-family: "Share Tech Mono", monospace;
+    font-size: 1rem;
+    text-align: center;
+    padding: 2rem;
+  }
+}
