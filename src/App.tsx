@@ -3,7 +3,6 @@ import { GameProvider, useGame } from "@/context/GameContext";
 import { TerminalFrame } from "@/components/core/TerminalFrame";
 import { Terminal } from "@/components/core/Terminal";
 import { CRTOverlay } from "@/components/core/CRTOverlay";
-import { JanitorAmbiance } from "@/components/gameplay/JanitorAmbiance";
 
 function AppContent() {
   const { state, dispatch } = useGame();
@@ -26,7 +25,6 @@ function AppContent() {
           onPowerOn={() => setTransitioning(true)}
         />
         <CRTOverlay />
-        <JanitorAmbiance />
       </TerminalFrame>
     </div>
   );

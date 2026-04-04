@@ -27,6 +27,8 @@ export interface InteractableFile {
   activeLabel: string;
   inactiveLabel: string;
   defaultState: boolean;
+  activateAudio?: AudioFile;
+  oneWay?: boolean;
 }
 
 export interface StatusFile {
@@ -37,13 +39,22 @@ export interface StatusFile {
   adminOnly?: boolean;
 }
 
+export interface EmailFile {
+  type: "email";
+  id: string;
+  name: string;
+  text: string;
+  adminOnly?: boolean;
+  attachment?: AudioFile;
+}
+
 export interface JanitorControlFile {
   type: "janitor-control";
   id: string;
   name: string;
 }
 
-export type FileNode = Folder | AudioFile | InteractableFile | StatusFile | JanitorControlFile;
+export type FileNode = Folder | AudioFile | InteractableFile | StatusFile | EmailFile | JanitorControlFile;
 
 export interface PasswordGate {
   folderId: string;

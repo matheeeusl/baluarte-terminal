@@ -45,17 +45,11 @@ export const LABEL_JANITOR_ACTIVE = "Ativo";
 export const LABEL_JANITOR_CONTAINED = "Contido";
 export const LABEL_CURRENT_PATH = "Local";
 
-export const STATUS_ROWS_STATIC = [
-  { label: "Status do Terminal",         value: "Online"          },
-  { label: "Status da Rede",             value: "Online"          },
-  { label: "Tempo de Bateria estimado",  value: "3,7799e+7 Horas" },
-  { label: "Último diagnóstico de rede", value: "!Error!"         },
-] as const;
-
 // --- Folder view ---
 export const LABEL_LOCKED = "[BLOQUEADO]";
 export const LABEL_JANITOR_GRANT = "Conceder Acesso ao Zelador";
 export const LABEL_JANITOR_REVOKE = "Revogar Acesso ao Zelador";
+export const LABEL_PROCESSING = "[ PROCESSANDO... ]";
 
 // --- Password input ---
 export const LABEL_WRONG_PASSWORD = "Senha incorreta.";

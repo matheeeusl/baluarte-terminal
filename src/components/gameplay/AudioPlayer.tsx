@@ -13,9 +13,10 @@ import type { AudioFile } from "@/types";
 interface AudioPlayerProps {
   file: AudioFile;
   onStop?: () => void;
+  autoPlay?: boolean;
 }
 
-export function AudioPlayer({ file, onStop }: AudioPlayerProps) {
+export function AudioPlayer({ file, onStop, autoPlay = false }: AudioPlayerProps) {
   const [playing, setPlaying] = useState(false);
   const [elapsed, setElapsed] = useState(0);
   const howlRef = useRef<Howl | null>(null);
@@ -23,7 +24,7 @@ export function AudioPlayer({ file, onStop }: AudioPlayerProps) {
   const progressRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    howlRef.current = new Howl({
+    const howl = new Howl({
       src: [file.src],
       html5: true,
       onend: () => {
@@ -32,11 +33,19 @@ export function AudioPlayer({ file, onStop }: AudioPlayerProps) {
         cancelAnimationFrame(rafRef.current);
       },
     });
+    howlRef.current = howl;
+
+    if (autoPlay) {
+      howl.play();
+      setPlaying(true);
+      rafRef.current = requestAnimationFrame(tick);
+    }
 
     return () => {
-      howlRef.current?.unload();
+      howl.unload();
       cancelAnimationFrame(rafRef.current);
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [file.src]);
 
   function tick() {

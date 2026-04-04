@@ -14,9 +14,10 @@ import {
   LABEL_BACK,
   LABEL_JANITOR_GRANT,
   LABEL_JANITOR_REVOKE,
+  LABEL_PROCESSING,
 } from "@/data/labels";
 import type { MenuItem } from "@/components/ui/MenuList";
-import type { AudioFile, FileNode, InteractableFile, StatusFile } from "@/types";
+import type { AudioFile, EmailFile, FileNode, InteractableFile, StatusFile } from "@/types";
 import type { useFileSystem } from "@/hooks/useFileSystem";
 
 type FileSystem = ReturnType<typeof useFileSystem>;
@@ -36,6 +37,7 @@ const ICONS: Record<string, string> = {
   audio: "🔊",
   interactable: "⚙",
   status: "📄",
+  email: "✉",
   "janitor-control": "👁",
 };
 
@@ -49,17 +51,39 @@ export function FolderView({ fileSystem }: Props) {
   const isAdmin = state.phase === "AUTHENTICATED";
   const [showPassword, setShowPassword] = useState<string | null>(null);
   const [activeAudio, setActiveAudio] = useState<AudioFile | null>(null);
+  const [autoPlayAudio, setAutoPlayAudio] = useState(false);
   const [activeStatus, setActiveStatus] = useState<StatusFile | null>(null);
+  const [activeEmail, setActiveEmail] = useState<EmailFile | null>(null);
+  const [emailAudio, setEmailAudio] = useState<AudioFile | null>(null);
+  const [processing, setProcessing] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     setShowPassword(null);
     setActiveAudio(null);
+    setAutoPlayAudio(false);
     setActiveStatus(null);
+    setActiveEmail(null);
+    setEmailAudio(null);
   }, [currentFolder.id]);
+
+  const PROCESSING_DELAY = 1500;
+
+  function withProcessing(id: string, action: () => void) {
+    setProcessing((prev) => new Set(prev).add(id));
+    setTimeout(() => {
+      action();
+      setProcessing((prev) => {
+        const next = new Set(prev);
+        next.delete(id);
+        return next;
+      });
+    }, PROCESSING_DELAY);
+  }
 
   const visibleChildren = currentFolder.children.filter((node) => {
     if (node.type === "folder" && node.adminOnly && !isAdmin) return false;
     if (node.type === "status" && node.adminOnly && !isAdmin) return false;
+    if (node.type === "email" && node.adminOnly && !isAdmin) return false;
     return true;
   });
 
@@ -82,19 +106,23 @@ export function FolderView({ fileSystem }: Props) {
 
   function fileNodeToMenuItem(node: FileNode): MenuItem {
     if (node.type === "interactable") {
+      const isProcessing = processing.has(node.id);
+      const isActive = state.interactableStates.get(node.id) ?? node.defaultState;
+      const isLocked = node.oneWay && isActive;
       return {
         id: node.id,
-        label: interactableLabel(node),
+        label: isProcessing ? LABEL_PROCESSING : interactableLabel(node),
         icon: ICONS.interactable,
-        disabled: false,
+        disabled: isProcessing || isLocked,
       };
     }
     if (node.type === "janitor-control") {
+      const isProcessing = processing.has(node.id);
       return {
         id: node.id,
-        label: janitorControlLabel(),
+        label: isProcessing ? LABEL_PROCESSING : janitorControlLabel(),
         icon: ICONS["janitor-control"],
-        disabled: false,
+        disabled: isProcessing,
       };
     }
     const locked = node.type === "folder" && node.password && !canAccess(node);
@@ -151,7 +179,17 @@ export function FolderView({ fileSystem }: Props) {
           }
 
           if (node.type === "interactable") {
-            dispatch({ type: "TOGGLE_INTERACTABLE", fileId: node.id });
+            const currentlyActive =
+              state.interactableStates.get(node.id) ?? node.defaultState;
+            withProcessing(node.id, () => {
+              dispatch({ type: "TOGGLE_INTERACTABLE", fileId: node.id });
+              if (!currentlyActive && node.activateAudio) {
+                setActiveAudio(node.activateAudio);
+                setAutoPlayAudio(true);
+                setActiveStatus(null);
+                setActiveEmail(null);
+              }
+            });
             return;
           }
 
@@ -159,10 +197,12 @@ export function FolderView({ fileSystem }: Props) {
             const granted =
               state.janitorOverrides.get(currentFolder.id) ??
               currentFolder.janitorAccess;
-            dispatch({
-              type: granted ? "REVOKE_JANITOR_ACCESS" : "GRANT_JANITOR_ACCESS",
-              folderId: currentFolder.id,
-            });
+            withProcessing(node.id, () =>
+              dispatch({
+                type: granted ? "REVOKE_JANITOR_ACCESS" : "GRANT_JANITOR_ACCESS",
+                folderId: currentFolder.id,
+              }),
+            );
             return;
           }
 
@@ -175,6 +215,16 @@ export function FolderView({ fileSystem }: Props) {
           if (node.type === "status") {
             setActiveStatus(activeStatus?.id === node.id ? null : node);
             setActiveAudio(null);
+            setActiveEmail(null);
+            return;
+          }
+
+          if (node.type === "email") {
+            const next = activeEmail?.id === node.id ? null : node;
+            setActiveEmail(next);
+            setEmailAudio(null);
+            setActiveStatus(null);
+            setActiveAudio(null);
             return;
           }
         }}
@@ -186,11 +236,36 @@ export function FolderView({ fileSystem }: Props) {
           {activeStatus.text}
         </div>
       )}
+      {activeEmail && (
+        <div className="mt-auto border-t border-(--color-muted) pt-3 text-sm text-(--color-fg) font-terminal space-y-3">
+          <p className="text-(--color-accent)">{activeEmail.name}</p>
+          <p className="whitespace-pre-wrap">{activeEmail.text}</p>
+          {activeEmail.attachment && (
+            <div className="border-t border-(--color-muted) pt-2">
+              {emailAudio ? (
+                <AudioPlayer
+                  file={emailAudio}
+                  onStop={() => setEmailAudio(null)}
+                />
+              ) : (
+                <button
+                  className="flex items-center gap-2 cursor-pointer hover:text-(--color-accent) transition-colors"
+                  onClick={() => setEmailAudio(activeEmail.attachment!)}
+                >
+                  <span>🔊</span>
+                  <span>{activeEmail.attachment.name}</span>
+                </button>
+              )}
+            </div>
+          )}
+        </div>
+      )}
       {activeAudio && (
         <div className="mt-auto border-t border-(--color-muted) pt-3">
           <AudioPlayer
             file={activeAudio}
-            onStop={() => setActiveAudio(null)}
+            autoPlay={autoPlayAudio}
+            onStop={() => { setActiveAudio(null); setAutoPlayAudio(false); }}
           />
         </div>
       )}

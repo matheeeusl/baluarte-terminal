@@ -41,7 +41,7 @@ export function useJanitor(): boolean {
     }
 
     function scheduleFlicker() {
-      const delay = 60_000 + Math.random() * 60_000;
+      const delay = 30_000 + Math.random() * 30_000;
       return setTimeout(() => {
         setIsFlickering(true);
         setTimeout(() => {

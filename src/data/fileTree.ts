@@ -1,5 +1,12 @@
 import type { Folder } from "@/types";
-import { TEXT_PRESENTATION_WELCOME } from "@/data/texts";
+import {
+  TEXT_EMAIL_AUDIO,
+  TEXT_EMAIL_VAZADO_1,
+  TEXT_EMAIL_VAZADO_2,
+  TEXT_EMAIL_VAZADO_3,
+  TEXT_EMAIL_VAZADO_4,
+  TEXT_PRESENTATION_WELCOME,
+} from "@/data/texts";
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
 function audio(path: string) {
@@ -44,20 +51,77 @@ export const fileTree: Folder = {
     },
     {
       type: "folder",
-      id: "audio-files",
-      name: "Arquivos de Áudio",
+      id: "emails",
+      name: "Emails",
       password: null,
-      janitorAccess: false,
+      janitorAccess: true,
       adminOnly: false,
       children: [
-        // --- SUBPASTA: MESSAGES ---
+        {
+          type: "email",
+          id: "email-vazado1",
+          name: "🚀 Resultados reais! Aumente seu tamanho e potência hoje mesmo!",
+          text: TEXT_EMAIL_VAZADO_1,
+        },
+        {
+          type: "email",
+          id: "email-audio",
+          name: "Arquivo de áudio (Cafeteria)",
+          text: TEXT_EMAIL_AUDIO,
+          attachment: {
+            type: "audio",
+            id: "audio-rec-fcs2",
+            name: "Reproduzir Áudio",
+            src: audio("/assets/audio/FCs2.wav"),
+            duration: 95,
+          },
+          adminOnly: false,
+        },
+        {
+          type: "email",
+          id: "email-vazado-2",
+          name: "CALOTEIRO, ESTÁ DESTRUINDO O NEGÓCIO LOCAL!!! (Pedido #4409)",
+          text: TEXT_EMAIL_VAZADO_2,
+        },
+        {
+          type: "email",
+          id: "email-vazado-3",
+          name: "Caiu um drone no Setor 04, novamente...",
+          text: TEXT_EMAIL_VAZADO_3,
+        },
+        {
+          type: "folder",
+          id: "pecas-email",
+          name: "RE: Relatório de peças danificadas / Revisão de Orçamento Urgente",
+          password: "Ks2J",
+          janitorAccess: false,
+          adminOnly: false,
+          children: [
+            {
+              type: "email",
+              id: "email-pecas",
+              name: "RE: Relatório de peças danificadas / Revisão de Orçamento Urgente ",
+              text: TEXT_EMAIL_VAZADO_4,
+            },
+          ],
+        },
+      ],
+    },
+    {
+      type: "folder",
+      id: "audio-files",
+      name: "Documentos para idenização",
+      password: null,
+      janitorAccess: true,
+      adminOnly: true,
+      children: [
         {
           type: "folder",
           id: "messages",
           name: "Mensagens",
-          password: null, // Sem senha
-          janitorAccess: false,
-          adminOnly: false,
+          password: null,
+          janitorAccess: true,
+          adminOnly: true,
           children: [
             {
               type: "folder",
@@ -65,7 +129,7 @@ export const fileTree: Folder = {
               name: "Acho que sei quem foi o Culpado",
               password: "DEFINIR",
               janitorAccess: false,
-              adminOnly: false,
+              adminOnly: true,
               children: [
                 {
                   type: "audio",
@@ -82,7 +146,7 @@ export const fileTree: Folder = {
               name: "Chegando Tarde",
               password: "DEFINIR",
               janitorAccess: false,
-              adminOnly: false,
+              adminOnly: true,
               children: [
                 {
                   type: "audio",
@@ -99,7 +163,7 @@ export const fileTree: Folder = {
               name: "Churras",
               password: "DEFINIR",
               janitorAccess: false,
-              adminOnly: false,
+              adminOnly: true,
               children: [
                 {
                   type: "audio",
@@ -114,9 +178,9 @@ export const fileTree: Folder = {
               type: "folder",
               id: "folder-msg-filha",
               name: "Minha Filha",
-              password: "DEFINIR",
+              password: null,
               janitorAccess: false,
-              adminOnly: false,
+              adminOnly: true,
               children: [
                 {
                   type: "audio",
@@ -133,7 +197,7 @@ export const fileTree: Folder = {
               name: "Pêsames",
               password: "DEFINIR",
               janitorAccess: false,
-              adminOnly: false,
+              adminOnly: true,
               children: [
                 {
                   type: "audio",
@@ -148,9 +212,9 @@ export const fileTree: Folder = {
               type: "folder",
               id: "folder-msg-preguicoso",
               name: "Preguiçoso",
-              password: "DEFINIR",
+              password: null,
               janitorAccess: false,
-              adminOnly: false,
+              adminOnly: true,
               children: [
                 {
                   type: "audio",
@@ -165,9 +229,9 @@ export const fileTree: Folder = {
               type: "folder",
               id: "folder-msg-review",
               name: "Review",
-              password: "DEFINIR",
+              password: null,
               janitorAccess: false,
-              adminOnly: false,
+              adminOnly: true,
               children: [
                 {
                   type: "audio",
@@ -185,9 +249,9 @@ export const fileTree: Folder = {
           type: "folder",
           id: "recorded",
           name: "Gravações",
-          password: null, // Sem senha
-          janitorAccess: false,
-          adminOnly: false,
+          password: null,
+          janitorAccess: true,
+          adminOnly: true,
           children: [
             {
               type: "folder",
@@ -195,7 +259,7 @@ export const fileTree: Folder = {
               name: "$h17",
               password: "DEFINIR",
               janitorAccess: false,
-              adminOnly: false,
+              adminOnly: true,
               children: [
                 {
                   type: "audio",
@@ -210,9 +274,9 @@ export const fileTree: Folder = {
               type: "folder",
               id: "folder-rec-4dm1n",
               name: "4dm1n",
-              password: "DEFINIR",
+              password: null,
               janitorAccess: false,
-              adminOnly: false,
+              adminOnly: true,
               children: [
                 {
                   type: "audio",
@@ -229,7 +293,7 @@ export const fileTree: Folder = {
               name: "C4m1s4",
               password: "DEFINIR",
               janitorAccess: false,
-              adminOnly: false,
+              adminOnly: true,
               children: [
                 {
                   type: "audio",
@@ -242,28 +306,11 @@ export const fileTree: Folder = {
             },
             {
               type: "folder",
-              id: "folder-rec-fcs2",
-              name: "FCs2",
-              password: "DEFINIR",
-              janitorAccess: false,
-              adminOnly: false,
-              children: [
-                {
-                  type: "audio",
-                  id: "audio-rec-fcs2",
-                  name: "Reproduzir Áudio",
-                  src: audio("/assets/audio/FCs2.wav"),
-                  duration: 95,
-                },
-              ],
-            },
-            {
-              type: "folder",
               id: "folder-rec-gh0s7",
               name: "Gh0s7",
               password: "DEFINIR",
               janitorAccess: false,
-              adminOnly: false,
+              adminOnly: true,
               children: [
                 {
                   type: "audio",
@@ -278,9 +325,9 @@ export const fileTree: Folder = {
               type: "folder",
               id: "folder-rec-r0c",
               name: "R0c%",
-              password: "DEFINIR",
+              password: null,
               janitorAccess: false,
-              adminOnly: false,
+              adminOnly: true,
               children: [
                 {
                   type: "audio",
@@ -310,7 +357,40 @@ export const fileTree: Folder = {
           password: null,
           janitorAccess: false,
           adminOnly: true,
-          children: [],
+          children: [
+            {
+              type: "folder",
+              id: "setor-1-sala-1",
+              name: "Setor 1 - Prisão",
+              password: null,
+              janitorAccess: false,
+              adminOnly: true,
+              children: [
+                {
+                  type: "interactable",
+                  id: "lock-gates",
+                  name: "Controle das Comportas",
+                  label: "Comportas",
+                  activeLabel: "Comportas [ABERTAS]",
+                  inactiveLabel: "Comportas [FECHADAS]",
+                  defaultState: false,
+                  oneWay: true,
+                  activateAudio: {
+                    type: "audio",
+                    id: "audio-lock-gates",
+                    name: "Reproduzir Áudio",
+                    src: audio("/assets/audio/interface/warning_sound.wav"),
+                    duration: 12,
+                  },
+                },
+                {
+                  type: "janitor-control",
+                  id: "janitor-control-prision",
+                  name: "Conceder acesso do zelador à prisão",
+                },
+              ],
+            },
+          ],
         },
         {
           type: "folder",

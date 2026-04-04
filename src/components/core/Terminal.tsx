@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useGame } from "@/context/GameContext";
 import { NavigationProvider } from "@/context/NavigationContext";
+import { JanitorAmbiance } from "@/components/gameplay/JanitorAmbiance";
 import { Loading } from "@/components/core/Loading";
 import { Shutdown } from "@/components/core/Shutdown";
 import { HomeScreen } from "@/components/gameplay/HomeScreen";
@@ -76,6 +77,7 @@ export function Terminal({ onTransitionEnd, onPowerOn }: Props) {
       ) : (
         <FolderView fileSystem={fileSystem} />
       )}
+      <JanitorAmbiance />
     </NavigationProvider>
   );
 }
