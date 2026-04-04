@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Howl } from "howler";
 import { formatDuration } from "@/lib/format";
+import { ARIA_PLAY_AUDIO, ARIA_STOP_AUDIO, LABEL_TRANSCRIPT } from "@/data/labels";
 import type { AudioFile } from "@/types";
 
 interface AudioPlayerProps {
@@ -60,7 +61,7 @@ export function AudioPlayer({ file, onStop }: AudioPlayerProps) {
         <button
           onClick={playing ? handleStop : handlePlay}
           className="border border-(--color-fg) px-3 py-1 text-xs hover:bg-(--color-muted)"
-          aria-label={playing ? "Stop audio" : "Play audio"}
+          aria-label={playing ? ARIA_STOP_AUDIO : ARIA_PLAY_AUDIO}
         >
           {playing ? "■ STOP" : "▶ PLAY"}
         </button>
@@ -81,7 +82,7 @@ export function AudioPlayer({ file, onStop }: AudioPlayerProps) {
       {file.transcript && !playing && (
         <details className="text-xs text-(--color-muted)">
           <summary className="cursor-pointer hover:text-(--color-fg)">
-            Transcript
+            {LABEL_TRANSCRIPT}
           </summary>
           <p className="mt-1 whitespace-pre-wrap">{file.transcript}</p>
         </details>

@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { sanitizePassword } from "@/lib/format";
 import { playInterface } from "@/lib/audio";
+import { LABEL_RETRY_IN, LABEL_ATTEMPTS_LEFT, ARIA_ENTER_PASSWORD } from "@/data/labels";
 
 interface PasswordInputProps {
   onSubmit: (password: string) => void;
@@ -62,7 +63,7 @@ export function PasswordInput({
   if (locked) {
     return (
       <p className="font-terminal text-(--color-accent)" role="alert">
-        ACCESS DENIED — Retry in {lockRemaining}s
+        {LABEL_RETRY_IN(lockRemaining)}
       </p>
     );
   }
@@ -80,14 +81,13 @@ export function PasswordInput({
           playInterface("keystroke");
         }}
         className="bg-transparent font-terminal text-(--color-fg) outline-none caret-(--color-fg) border-b border-(--color-fg) w-40"
-        aria-label="Enter password"
+        aria-label={ARIA_ENTER_PASSWORD}
         autoComplete="off"
         spellCheck={false}
       />
       {attempts > 0 && (
         <span className="font-terminal text-xs text-(--color-accent)">
-          {maxAttempts - attempts} attempt
-          {maxAttempts - attempts !== 1 ? "s" : ""} left
+          {LABEL_ATTEMPTS_LEFT(maxAttempts - attempts)}
         </span>
       )}
     </form>

@@ -36,7 +36,13 @@ export interface StatusFile {
   text: string;
 }
 
-export type FileNode = Folder | AudioFile | InteractableFile | StatusFile;
+export interface JanitorControlFile {
+  type: "janitor-control";
+  id: string;
+  name: string;
+}
+
+export type FileNode = Folder | AudioFile | InteractableFile | StatusFile | JanitorControlFile;
 
 export interface PasswordGate {
   folderId: string;

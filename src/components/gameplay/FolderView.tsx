@@ -5,6 +5,14 @@ import { StatusBlock } from "@/components/ui/StatusBlock";
 import { PasswordInput } from "@/components/ui/PasswordInput";
 import { AudioPlayer } from "@/components/gameplay/AudioPlayer";
 import { formatPath } from "@/lib/format";
+import {
+  TERMINAL_BRAND,
+  LABEL_CHOOSE_OPTION,
+  LABEL_LOCKED,
+  LABEL_BACK,
+  LABEL_JANITOR_GRANT,
+  LABEL_JANITOR_REVOKE,
+} from "@/data/labels";
 import type { MenuItem } from "@/components/ui/MenuList";
 import type { AudioFile, FileNode, InteractableFile, StatusFile } from "@/types";
 import type { useFileSystem } from "@/hooks/useFileSystem";
@@ -16,6 +24,7 @@ const ICONS: Record<string, string> = {
   audio: "🔊",
   interactable: "⚙",
   status: "📄",
+  "janitor-control": "👁",
 };
 
 interface Props {
@@ -45,6 +54,13 @@ export function FolderView({ fileSystem }: Props) {
     (n): n is InteractableFile => n.type === "interactable",
   );
 
+  function janitorControlLabel(): string {
+    const granted =
+      state.janitorOverrides.get(currentFolder.id) ??
+      currentFolder.janitorAccess;
+    return granted ? LABEL_JANITOR_REVOKE : LABEL_JANITOR_GRANT;
+  }
+
   function interactableLabel(node: InteractableFile): string {
     const active = state.interactableStates.get(node.id) ?? node.defaultState;
     return active ? node.activeLabel : node.inactiveLabel;
@@ -59,10 +75,18 @@ export function FolderView({ fileSystem }: Props) {
         disabled: false,
       };
     }
+    if (node.type === "janitor-control") {
+      return {
+        id: node.id,
+        label: janitorControlLabel(),
+        icon: ICONS["janitor-control"],
+        disabled: false,
+      };
+    }
     const locked = node.type === "folder" && node.password && !canAccess(node);
     return {
       id: node.id,
-      label: node.name + (locked ? " [LOCKED]" : ""),
+      label: node.name + (locked ? ` ${LABEL_LOCKED}` : ""),
       icon: ICONS[node.type],
       disabled: false,
     };
@@ -71,14 +95,14 @@ export function FolderView({ fileSystem }: Props) {
   const items: MenuItem[] = [
     ...visibleChildren.map(fileNodeToMenuItem),
     ...(pathStack.length > 1
-      ? [{ id: "__back", label: "Back", icon: "◄" }]
+      ? [{ id: "__back", label: LABEL_BACK, icon: "◄" }]
       : []),
   ];
 
   return (
     <div className="flex h-full flex-col gap-3 p-10 font-terminal overflow-auto">
       <h1 className="text-base text-(--color-accent)">
-        ██ ROBCO INDUSTRIES (TM) TERMLINK
+        {TERMINAL_BRAND}
       </h1>
       <StatusBlock currentPath={formatPath(pathStack)} />
 
@@ -92,7 +116,7 @@ export function FolderView({ fileSystem }: Props) {
       )}
 
       <hr className="border-(--color-muted)" />
-      <p className="text-sm text-(--color-fg)">Choose an option:</p>
+      <p className="text-sm text-(--color-fg)">{LABEL_CHOOSE_OPTION}</p>
       <MenuList
         items={items}
         onSelect={(item) => {
@@ -114,6 +138,17 @@ export function FolderView({ fileSystem }: Props) {
 
           if (node.type === "interactable") {
             dispatch({ type: "TOGGLE_INTERACTABLE", fileId: node.id });
+            return;
+          }
+
+          if (node.type === "janitor-control") {
+            const granted =
+              state.janitorOverrides.get(currentFolder.id) ??
+              currentFolder.janitorAccess;
+            dispatch({
+              type: granted ? "REVOKE_JANITOR_ACCESS" : "GRANT_JANITOR_ACCESS",
+              folderId: currentFolder.id,
+            });
             return;
           }
 

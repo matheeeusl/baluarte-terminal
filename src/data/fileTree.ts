@@ -56,6 +56,11 @@ export const fileTree: Folder = {
               inactiveLabel: "Turrets: DISABLED",
               defaultState: true,
             },
+            {
+              type: "janitor-control",
+              id: "monitoring-janitor-control",
+              name: "Controle do Zelador",
+            },
           ],
         },
         {

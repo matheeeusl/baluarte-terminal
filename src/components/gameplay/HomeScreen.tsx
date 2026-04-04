@@ -1,5 +1,13 @@
 import { useState } from "react";
 import { useGame } from "@/context/GameContext";
+import {
+  TERMINAL_BRAND,
+  WELCOME_MESSAGE,
+  LABEL_ADMIN_LOGIN,
+  LABEL_GUEST_ACCESS,
+  LABEL_SETTINGS,
+  LABEL_CHOOSE_OPTION,
+} from "@/data/labels";
 import { MenuList } from "@/components/ui/MenuList";
 import { PasswordInput } from "@/components/ui/PasswordInput";
 import { SettingsScreen } from "@/components/gameplay/SettingsScreen";
@@ -12,9 +20,9 @@ interface Props {
 type HomeView = "menu" | "settings";
 
 const HOME_ITEMS: MenuItem[] = [
-  { id: "admin-login", label: "Admin Login", icon: "🔐" },
-  { id: "guest", label: "Guest Access", icon: "👤" },
-  { id: "settings", label: "Settings", icon: "⚙" },
+  { id: "admin-login", label: LABEL_ADMIN_LOGIN, icon: "🔐" },
+  { id: "guest", label: LABEL_GUEST_ACCESS, icon: "👤" },
+  { id: "settings", label: LABEL_SETTINGS, icon: "⚙" },
 ];
 
 export function HomeScreen({ navigate }: Props) {
@@ -29,10 +37,10 @@ export function HomeScreen({ navigate }: Props) {
   return (
     <div className="flex h-full flex-col gap-4 p-10 font-terminal">
       <h1 className="text-lg text-(--color-accent)">
-        ██ ROBCO INDUSTRIES (TM) TERMLINK
+        {TERMINAL_BRAND}
       </h1>
-      <p className="text-(--color-fg)">Welcome to Facility...</p>
-      <p className="text-sm text-(--color-fg)">Choose an option:</p>
+      <p className="text-(--color-fg)">{WELCOME_MESSAGE}</p>
+      <p className="text-sm text-(--color-fg)">{LABEL_CHOOSE_OPTION}</p>
       <MenuList
         items={HOME_ITEMS}
         onSelect={(item) => {
