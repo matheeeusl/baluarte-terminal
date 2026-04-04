@@ -19,10 +19,13 @@ export function useKeyboard({
 }: KeyboardNavOptions) {
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
-      if (
+      const inInput =
         e.target instanceof HTMLInputElement ||
-        e.target instanceof HTMLTextAreaElement
-      ) {
+        e.target instanceof HTMLTextAreaElement;
+
+      // Allow arrow navigation even when an input is focused;
+      // block all other shortcuts to avoid interfering with typing.
+      if (inInput && e.key !== "ArrowUp" && e.key !== "ArrowDown") {
         return;
       }
       switch (e.key) {

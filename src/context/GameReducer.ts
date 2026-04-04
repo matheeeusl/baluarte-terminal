@@ -68,6 +68,14 @@ export function gameReducer(state: GameState, event: GameEvent): GameState {
         failedAttempts: new Map([...state.failedAttempts, [event.folderId, 0]]),
       };
 
+    case "RECORD_FAILED_ATTEMPT": {
+      const prev = state.failedAttempts.get(event.folderId) ?? 0;
+      return {
+        ...state,
+        failedAttempts: new Map([...state.failedAttempts, [event.folderId, prev + 1]]),
+      };
+    }
+
     case "NAVIGATE":
       return { ...state, knob1Rotation: state.knob1Rotation + KNOB1_STEP };
 

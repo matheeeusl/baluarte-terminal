@@ -59,6 +59,8 @@ export const LABEL_JANITOR_REVOKE = "Revogar Acesso ao Zelador";
 
 // --- Password input ---
 export const LABEL_WRONG_PASSWORD = "Senha incorreta.";
+export const LABEL_ACCESS_DENIED_FOLDER = (folder: string) =>
+  `Acesso negado: ${folder}`;
 
 // --- Password input ---
 export const LABEL_ACCESS_DENIED = "ACESSO NEGADO";

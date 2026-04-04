@@ -3,6 +3,7 @@ import { sanitizePassword } from "@/lib/format";
 import { playInterface, stopInterface } from "@/lib/audio";
 import {
   LABEL_WRONG_PASSWORD,
+  LABEL_ACCESS_DENIED_FOLDER,
   LABEL_RETRY_IN,
   LABEL_ATTEMPTS_LEFT,
   ARIA_ENTER_PASSWORD,
@@ -11,20 +12,26 @@ import {
 interface PasswordInputProps {
   validate: (password: string) => boolean;
   onSubmit: (password: string) => void;
+  onFailure?: () => void;
   onCancel?: () => void;
   maxAttempts?: number;
   lockoutDuration?: number;
+  folderName?: string;
+  initialAttempts?: number;
 }
 
 export function PasswordInput({
   validate,
   onSubmit,
+  onFailure,
   onCancel,
   maxAttempts = 3,
   lockoutDuration = 5,
+  folderName,
+  initialAttempts = 0,
 }: PasswordInputProps) {
   const [value, setValue] = useState("");
-  const [wrongAttempts, setWrongAttempts] = useState(0);
+  const [wrongAttempts, setWrongAttempts] = useState(initialAttempts);
   const [locked, setLocked] = useState(false);
   const [lockRemaining, setLockRemaining] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -71,6 +78,7 @@ export function PasswordInput({
 
     const newWrong = wrongAttempts + 1;
     setWrongAttempts(newWrong);
+    onFailure?.();
 
     // Start geiger on first wrong attempt; it keeps looping until correct
     if (newWrong === 1) {
@@ -104,7 +112,10 @@ export function PasswordInput({
           value={value}
           onChange={(e) => setValue(sanitizePassword(e.target.value))}
           onKeyDown={(e) => {
-            if (e.key === "Escape") { onCancel?.(); return; }
+            if (e.key === "Escape") {
+              onCancel?.();
+              return;
+            }
             playInterface("keystroke");
           }}
           className="bg-transparent text-(--color-fg) outline-none caret-(--color-fg) border-b border-(--color-fg) w-40"
@@ -119,7 +130,11 @@ export function PasswordInput({
         )}
       </form>
       {wrongAttempts > 0 && (
-        <p className="text-xs text-(--color-accent)">{LABEL_WRONG_PASSWORD}</p>
+        <p className="text-xs text-(--color-accent)">
+          {folderName
+            ? LABEL_ACCESS_DENIED_FOLDER(folderName)
+            : LABEL_WRONG_PASSWORD}
+        </p>
       )}
     </div>
   );

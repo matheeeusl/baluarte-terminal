@@ -197,10 +197,16 @@ export function FolderView({ fileSystem }: Props) {
       {showPassword && (
         <div className="mt-auto">
           <PasswordInput
+            key={showPassword}
+            folderName={findFolder(showPassword, fileTree)?.name}
+            initialAttempts={state.failedAttempts.get(showPassword) ?? 0}
             validate={(pw) => {
               const folder = findFolder(showPassword, fileTree);
               return folder?.password?.toUpperCase() === pw.toUpperCase();
             }}
+            onFailure={() =>
+              dispatch({ type: "RECORD_FAILED_ATTEMPT", folderId: showPassword })
+            }
             onSubmit={(pw) => {
               dispatch({
                 type: "UNLOCK_FOLDER",

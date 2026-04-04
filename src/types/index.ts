@@ -69,6 +69,7 @@ export type GameEvent =
   | { type: "POWER_OFF" }
   | { type: "LOGIN_ADMIN"; password: string }
   | { type: "UNLOCK_FOLDER"; folderId: string; password: string }
+  | { type: "RECORD_FAILED_ATTEMPT"; folderId: string }
   | { type: "NAVIGATE"; nodeId: string }
   | { type: "PLAY_AUDIO"; fileId: string }
   | { type: "STOP_AUDIO" }
