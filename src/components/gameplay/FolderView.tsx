@@ -57,9 +57,11 @@ export function FolderView({ fileSystem }: Props) {
     setActiveStatus(null);
   }, [currentFolder.id]);
 
-  const visibleChildren = currentFolder.children.filter(
-    (node) => node.type !== "folder" || !node.adminOnly || isAdmin,
-  );
+  const visibleChildren = currentFolder.children.filter((node) => {
+    if (node.type === "folder" && node.adminOnly && !isAdmin) return false;
+    if (node.type === "status" && node.adminOnly && !isAdmin) return false;
+    return true;
+  });
 
   // Interactables in this folder — used for room status display and labels
   const interactables = visibleChildren.filter(

@@ -34,6 +34,7 @@ export interface StatusFile {
   id: string;
   name: string;
   text: string;
+  adminOnly?: boolean;
 }
 
 export interface JanitorControlFile {

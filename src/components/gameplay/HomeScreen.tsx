@@ -55,7 +55,7 @@ export function HomeScreen({ navigate }: Props) {
           <PasswordInput
             validate={(pw) => pw.toUpperCase() === ADMIN_PASSWORD.toUpperCase()}
             onSubmit={(pw) => {
-              dispatch({ type: "LOGIN_ADMIN", password: pw });
+              dispatch({ type: "LOGIN_ADMIN", password: pw.toUpperCase() });
               setShowPassword(false);
               navigate("root");
             }}
