@@ -2,18 +2,7 @@ import { useEffect, useState } from "react";
 import { useGame } from "@/context/GameContext";
 import { useNavigation } from "@/context/NavigationContext";
 import { fileTree } from "@/data/fileTree";
-import type { Folder } from "@/types";
-
-/** Returns the path from root to targetId, or null if not found. */
-function pathToFolder(targetId: string, node: Folder): Folder[] | null {
-  if (node.id === targetId) return [node];
-  for (const child of node.children) {
-    if (child.type !== "folder") continue;
-    const sub = pathToFolder(targetId, child);
-    if (sub) return [node, ...sub];
-  }
-  return null;
-}
+import { pathToFolder } from "@/lib/tree";
 
 /**
  * Janitor is active when the current folder OR any ancestor on the path

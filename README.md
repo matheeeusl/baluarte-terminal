@@ -1,6 +1,6 @@
 # Baluarte Terminal UI
 
-An immersive RPG interface inspired by RobCo terminals from Fallout 4. Players explore a fictional facility through password-locked folders containing audio logs, status readouts, and interactable systems. A rogue AI — the **Janitor** — adds ambient unease through subtle screen flickers. Everyone shares the same terminal; there is no separate DM view.
+An immersive RPG interface inspired by RobCo terminals from Fallout 4. Players explore a fictional facility through password-locked folders containing audio logs, status readouts, emails, images, and interactable systems. A rogue AI — the **Janitor** — adds ambient unease through subtle screen flickers. Everyone shares the same terminal; there is no separate DM view.
 
 ---
 
@@ -21,7 +21,7 @@ An immersive RPG interface inspired by RobCo terminals from Fallout 4. Players e
 ## Commands
 
 ```bash
-pnpm dev        # Dev server on port 3000
+pnpm dev        # Dev server
 pnpm build      # Type-check + production build
 pnpm lint       # ESLint
 pnpm test       # Run all tests
@@ -45,38 +45,27 @@ BOOT → GUEST / AUTHENTICATED
 | `GUEST`         | Default after boot — public folders only                      |
 | `AUTHENTICATED` | Admin login — all folders visible, room passwords still apply |
 
-**Events handled by the reducer:**
-
-```typescript
-type GameEvent =
-  | { type: "POWER_ON" }
-  | { type: "POWER_OFF" }
-  | { type: "LOGIN_ADMIN"; password: string }
-  | { type: "UNLOCK_FOLDER"; folderId: string; password: string }
-  | { type: "NAVIGATE"; nodeId: string }
-  | { type: "PLAY_AUDIO"; fileId: string }
-  | { type: "STOP_AUDIO" }
-  | { type: "TOGGLE_INTERACTABLE"; fileId: string }
-  | { type: "GRANT_JANITOR_ACCESS"; folderId: string }
-  | { type: "REVOKE_JANITOR_ACCESS"; folderId: string }
-  | { type: "TOGGLE_ROLEPLAY" }
-  | { type: "CHANGE_THEME"; palette: ThemePalette };
-```
-
 ### Navigation
 
-`useFileSystem` owns a `pathStack` (e.g. `["home", "root", "setor1"]`). `Terminal` is the single caller — it passes the result as props to `HomeScreen` and `FolderView` so there is always exactly one path stack instance.
+`useFileSystem` owns a `pathStack` (e.g. `["home", "root", "setor1"]`). `Terminal` is the single caller — it passes the result as props to `HomeScreen` and `FolderView`.
 
 ### Janitor System
 
-Each `Folder` has a `janitorAccess: boolean` flag. `useJanitorActive` walks from root to the **current folder** — if any folder on that path has `janitorAccess: true` (or a player override), the Janitor is active for that context only. Effects: random screen flicker every 1–2 minutes + CRT hum sound.
+Each `Folder` has a `janitorAccess: boolean` flag. `useJanitorActive` walks from root to the current folder — if any folder on that path has `janitorAccess: true` (or a player override), the Janitor is active. Effects: random screen flicker every 1–2 minutes + CRT hum sound.
 
 ---
 
 ## Data Model
 
 ```typescript
-type FileNode = Folder | AudioFile | InteractableFile | StatusFile;
+type FileNode =
+  | Folder
+  | AudioFile
+  | InteractableFile
+  | StatusFile
+  | EmailFile
+  | ImageFile
+  | JanitorControlFile;
 
 interface Folder {
   type: "folder";
@@ -84,7 +73,7 @@ interface Folder {
   name: string;
   password: string | null; // null = open, string = requires unlock
   janitorAccess: boolean;
-  adminOnly: boolean; // invisible to GUEST phase
+  adminOnly: boolean;       // invisible to GUEST phase
   children: FileNode[];
 }
 
@@ -92,8 +81,8 @@ interface AudioFile {
   type: "audio";
   id: string;
   name: string;
-  src: string; // path under /public
-  duration: number; // seconds
+  src: string;              // path under /public
+  duration: number;         // seconds
   transcript?: string;
 }
 
@@ -105,13 +94,41 @@ interface InteractableFile {
   activeLabel: string;
   inactiveLabel: string;
   defaultState: boolean;
+  oneWay?: boolean;         // cannot be deactivated once active
+  activateAudio?: AudioFile; // auto-plays when toggled false → true
 }
 
 interface StatusFile {
   type: "status";
   id: string;
   name: string;
-  text: string; // whitespace-pre-wrap
+  text: string;             // whitespace-pre-wrap
+  adminOnly?: boolean;
+}
+
+interface EmailFile {
+  type: "email";
+  id: string;
+  name: string;             // subject line shown in menu
+  text: string;             // email body
+  adminOnly?: boolean;
+  attachment?: AudioFile;   // shown as clickable button below the text
+}
+
+interface ImageFile {
+  type: "image";
+  id: string;
+  name: string;
+  src: string;              // path under /public
+  alt?: string;
+  caption?: string;         // text shown below the image
+  adminOnly?: boolean;
+}
+
+interface JanitorControlFile {
+  type: "janitor-control";
+  id: string;
+  name: string;
 }
 ```
 
@@ -119,7 +136,49 @@ interface StatusFile {
 >
 > - `adminOnly: true` → hidden from guests, visible after admin login
 > - `password: string` → visible to everyone, requires unlock
-> - After 3 failed attempts the input locks for 5 seconds
+> - After 3 failed attempts the input locks for 5 seconds; attempts are tracked per folder
+
+---
+
+## Adding Campaign Content
+
+The file tree is split into per-section files. Each section is a self-contained `Folder`.
+
+### Add a new area
+
+1. Create `src/data/sections/nova-area.ts`:
+
+```typescript
+import type { Folder } from "@/types";
+
+const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
+function audio(path: string) { return `${BASE}${path}`; }
+
+export const novaArea: Folder = {
+  type: "folder",
+  id: "nova-area",
+  name: "Nova Área",
+  password: "SENHA",     // null = open
+  janitorAccess: false,
+  adminOnly: false,
+  children: [],
+};
+```
+
+2. Import and register it in `src/data/fileTree.ts`:
+
+```typescript
+import { novaArea } from "./sections/nova-area";
+
+export const fileTree: Folder = {
+  ...
+  children: [..., novaArea],
+};
+```
+
+### Add long text
+
+Add a named export to `src/data/texts.ts` and import it in the section file. Never put multi-line strings inline in section files.
 
 ---
 
@@ -127,67 +186,16 @@ interface StatusFile {
 
 All audio files live in `public/assets/audio/`.
 
-| Category             | Location                         | Loading                     |
-| -------------------- | -------------------------------- | --------------------------- |
-| Interface sounds     | `public/assets/audio/interface/` | Lazy, cached Howl per sound |
-| Narrative audio logs | `public/assets/audio/`           | On-demand via `AudioPlayer` |
-
-**Interface sound triggers:**
-
-| File                    | Trigger                                     |
-| ----------------------- | ------------------------------------------- |
-| `beep_startup.wav`      | Power-on                                    |
-| `beep_off.wav`          | Power-off                                   |
-| `mechanical-switch.wav` | Menu navigation, selection, password typing |
-| `CRT_hum.wav`           | Janitor screen flicker event                |
-
-To add a narrative audio log, place the file in `public/assets/audio/` and add an `AudioFile` node to `src/data/fileTree.ts`:
-
-```typescript
-{
-  type: "audio",
-  id: "my-log-01",
-  name: "Audio Log — My Entry",
-  src: "/assets/audio/my-log-01.wav",
-  duration: 42,
-}
-```
-
----
-
-## Adding Content
-
-All game content is defined in **`src/data/fileTree.ts`**. The tree supports arbitrary nesting.
-
-```typescript
-// Public folder with a password
-{
-  type: "folder",
-  id: "lab",
-  name: "Laboratory",
-  password: "SCIENCE",
-  janitorAccess: false,
-  adminOnly: false,
-  children: [ /* FileNode[] */ ],
-}
-
-// Admin-only folder, no room password
-{
-  type: "folder",
-  id: "admin-logs",
-  name: "Admin Logs",
-  password: null,
-  janitorAccess: false,
-  adminOnly: true,
-  children: [ /* FileNode[] */ ],
-}
-```
+| Category             | Location                         |
+| -------------------- | -------------------------------- |
+| Interface sounds     | `public/assets/audio/interface/` |
+| Narrative audio logs | `public/assets/audio/`           |
 
 ---
 
 ## Themes
 
-Selectable in the Settings screen (before entering the terminal).
+Selectable in the Settings screen before entering the terminal.
 
 | Palette | Foreground | Accent    |
 | ------- | ---------- | --------- |
@@ -195,41 +203,54 @@ Selectable in the Settings screen (before entering the terminal).
 | `amber` | `#ffb833`  | `#ffd580` |
 | `white` | `#e0e0e0`  | `#ffffff` |
 
+Changing the theme also updates the favicon and the logo in the terminal header.
+
 ---
 
 ## Project Structure
 
 ```
 src/
-├── assets/images/          # terminal-frame.svg
+├── data/
+│   ├── fileTree.ts          # Composer — imports sections, exports root Folder
+│   ├── texts.ts             # All long text content (status, email bodies, etc.)
+│   └── sections/            # One file per top-level area of the campaign
+│       ├── apresentacao.ts
+│       ├── mapa.ts
+│       ├── emails.ts
+│       ├── documentos.ts
+│       └── setores.ts
+├── lib/
+│   ├── tree.ts              # findFolder + pathToFolder (shared utilities)
+│   ├── audio.ts             # Howler init and interface sounds
+│   ├── theme.ts             # Palette resolver, CSS var + favicon injector
+│   └── format.ts            # Text formatting helpers
 ├── components/
-│   ├── core/               # TerminalFrame, Terminal, CRTOverlay, Loading
-│   ├── gameplay/           # HomeScreen, FolderView, AudioPlayer,
-│   │                       # JanitorAmbiance, SettingsScreen
-│   └── ui/                 # MenuList, PasswordInput, StatusBlock, Typewriter
-├── context/                # GameContext, GameReducer, NavigationContext
-├── data/                   # fileTree.ts
-├── hooks/                  # useFileSystem, useJanitor, useKeyboard, useAudio
-├── lib/                    # audio.ts, theme.ts, format.ts
-├── types/                  # index.ts
-└── App.tsx
+│   ├── core/                # TerminalFrame, Terminal, CRTOverlay, Loading, Shutdown
+│   ├── gameplay/            # HomeScreen, FolderView, AudioPlayer, JanitorAmbiance
+│   └── ui/                  # MenuList, PasswordInput, StatusBlock, TerminalBrand
+├── context/                 # GameContext, GameReducer, NavigationContext
+├── hooks/                   # useFileSystem, useJanitor, useKeyboard, useAudio
+└── types/
+    └── index.ts             # All interfaces and type unions
 
 public/
-└── assets/audio/
-    ├── interface/          # Interface sound effects
-    └── *.wav               # Narrative audio logs
+├── assets/audio/
+│   ├── interface/           # Interface sound effects
+│   └── *.wav                # Narrative audio logs
+└── assets/imagens/          # Images and favicons
 ```
 
 ---
 
 ## Keyboard Navigation
 
-| Key         | Action                |
-| ----------- | --------------------- |
-| `↑` / `↓`   | Navigate menu items   |
-| `Enter`     | Select / confirm      |
-| `Backspace` | Go back one level     |
-| `Escape`    | Cancel password input |
+| Key       | Action                                           |
+| --------- | ------------------------------------------------ |
+| `↑` / `↓` | Navigate menu items (works even while typing password) |
+| `Enter`   | Select / confirm                                 |
+| `Backspace` | Go back one level                              |
+| `Escape`  | Cancel password input                            |
 
 ---
 

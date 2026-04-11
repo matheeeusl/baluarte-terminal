@@ -1,18 +1,8 @@
 import { useState, useCallback, useEffect } from "react";
-import type { FileNode, Folder } from "@/types";
+import type { FileNode } from "@/types";
 import { fileTree } from "@/data/fileTree";
+import { findFolder } from "@/lib/tree";
 import { useGame } from "@/context/GameContext";
-
-function findFolder(id: string, node: Folder): Folder | null {
-  if (node.id === id) return node;
-  for (const child of node.children) {
-    if (child.type === "folder") {
-      const found = findFolder(id, child);
-      if (found) return found;
-    }
-  }
-  return null;
-}
 
 export function useFileSystem() {
   const { state, dispatch } = useGame();

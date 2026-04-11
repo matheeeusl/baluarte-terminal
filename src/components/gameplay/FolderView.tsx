@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Howl } from "howler";
 import { useGame } from "@/context/GameContext";
 import { MenuList } from "@/components/ui/MenuList";
 import { StatusBlock } from "@/components/ui/StatusBlock";
@@ -7,7 +8,7 @@ import { AudioPlayer } from "@/components/gameplay/AudioPlayer";
 import { formatPath } from "@/lib/format";
 import { TerminalBrand } from "@/components/ui/TerminalBrand";
 import { fileTree } from "@/data/fileTree";
-import type { Folder } from "@/types";
+import { findFolder } from "@/lib/tree";
 import {
   LABEL_CHOOSE_OPTION,
   LABEL_LOCKED,
@@ -22,15 +23,6 @@ import type { useFileSystem } from "@/hooks/useFileSystem";
 
 type FileSystem = ReturnType<typeof useFileSystem>;
 
-function findFolder(id: string, node: Folder): Folder | null {
-  if (node.id === id) return node;
-  for (const child of node.children) {
-    if (child.type !== "folder") continue;
-    const found = findFolder(id, child);
-    if (found) return found;
-  }
-  return null;
-}
 
 const ICONS: Record<string, string> = {
   folder: "📁",
@@ -52,7 +44,6 @@ export function FolderView({ fileSystem }: Props) {
   const isAdmin = state.phase === "AUTHENTICATED";
   const [showPassword, setShowPassword] = useState<string | null>(null);
   const [activeAudio, setActiveAudio] = useState<AudioFile | null>(null);
-  const [autoPlayAudio, setAutoPlayAudio] = useState(false);
   const [activeStatus, setActiveStatus] = useState<StatusFile | null>(null);
   const [activeEmail, setActiveEmail] = useState<EmailFile | null>(null);
   const [activeImage, setActiveImage] = useState<ImageFile | null>(null);
@@ -62,7 +53,6 @@ export function FolderView({ fileSystem }: Props) {
   useEffect(() => {
     setShowPassword(null);
     setActiveAudio(null);
-    setAutoPlayAudio(false);
     setActiveStatus(null);
     setActiveEmail(null);
     setEmailAudio(null);
@@ -188,10 +178,7 @@ export function FolderView({ fileSystem }: Props) {
             withProcessing(node.id, () => {
               dispatch({ type: "TOGGLE_INTERACTABLE", fileId: node.id });
               if (!currentlyActive && node.activateAudio) {
-                setActiveAudio(node.activateAudio);
-                setAutoPlayAudio(true);
-                setActiveStatus(null);
-                setActiveEmail(null);
+                new Howl({ src: [node.activateAudio], html5: true }).play();
               }
             });
             return;
@@ -262,7 +249,7 @@ export function FolderView({ fileSystem }: Props) {
               ) : (
                 <button
                   className="flex items-center gap-2 cursor-pointer hover:text-(--color-accent) transition-colors"
-                  onClick={() => setEmailAudio(activeEmail.attachment!)}
+                  onClick={() => activeEmail.attachment && setEmailAudio(activeEmail.attachment)}
                 >
                   <span>🔊</span>
                   <span>{activeEmail.attachment.name}</span>
@@ -289,8 +276,7 @@ export function FolderView({ fileSystem }: Props) {
         <div className="mt-auto border-t border-(--color-muted) pt-3">
           <AudioPlayer
             file={activeAudio}
-            autoPlay={autoPlayAudio}
-            onStop={() => { setActiveAudio(null); setAutoPlayAudio(false); }}
+            onStop={() => setActiveAudio(null)}
           />
         </div>
       )}

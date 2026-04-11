@@ -83,7 +83,7 @@ Every event maps to a reducer case. Every reducer case gets a unit test.
 The terminal mimics a **file system**. Everything is either a folder or a file. Folders can contain other folders and files. Files are audio logs, interactable actions, or status readouts.
 
 ```typescript
-type FileNode = Folder | AudioFile | InteractableFile | StatusFile;
+type FileNode = Folder | AudioFile | InteractableFile | StatusFile | EmailFile | ImageFile | JanitorControlFile;
 
 interface Folder {
   type: "folder";
@@ -91,6 +91,7 @@ interface Folder {
   name: string; // Display name: "Laboratory"
   password: string | null; // null = open access
   janitorAccess: boolean; // Janitor can see this folder?
+  adminOnly: boolean; // Hidden from guests if true
   children: FileNode[]; // Other folders and files inside
 }
 
@@ -111,6 +112,8 @@ interface InteractableFile {
   activeLabel: string; // "Turrets: ACTIVE"
   inactiveLabel: string; // "Turrets: DISABLED"
   defaultState: boolean; // Initial state (true = active)
+  oneWay?: boolean; // If true, cannot be deactivated once active
+  activateAudio?: AudioFile; // Auto-plays when toggled false → true
 }
 
 interface StatusFile {
@@ -118,10 +121,36 @@ interface StatusFile {
   id: string;
   name: string; // "System Status"
   text: string; // Read-only text shown in terminal
+  adminOnly?: boolean;
+}
+
+interface EmailFile {
+  type: "email";
+  id: string;
+  name: string; // Subject line shown in menu
+  text: string; // Email body (supports \n line breaks)
+  adminOnly?: boolean;
+  attachment?: AudioFile; // Optional audio attachment, shown as clickable button
+}
+
+interface ImageFile {
+  type: "image";
+  id: string;
+  name: string;
+  src: string; // Path in /assets/imagens/
+  alt?: string; // Accessibility description
+  caption?: string; // Optional text shown below the image
+  adminOnly?: boolean;
+}
+
+interface JanitorControlFile {
+  type: "janitor-control";
+  id: string;
+  name: string; // Label shown in menu
 }
 ```
 
-> **Content note:** The file tree in `fileTree.ts` will be populated as the campaign is designed. The structure supports any depth of nesting. Audio files are fictional situation recordings (e.g. an intercepted radio call, a security log, a distress signal). A single folder can contain multiple audio files, interactables, status readouts, and subfolders.
+> **Content note:** The file tree is split into per-section files under `src/data/sections/`. Each section exports a `Folder` and is imported by `fileTree.ts`. Long text content lives in `src/data/texts.ts`. To add a new area, create `src/data/sections/nova-area.ts` and add it to `fileTree.ts`.
 
 ### PasswordGate
 
@@ -385,8 +414,14 @@ src/
 │   ├── GameContext.tsx             # Provider wrapping useReducer
 │   └── GameContext.test.tsx
 ├── data/
-│   ├── fileTree.ts                # File system tree definition (static)
-│   └── audio-manifest.ts          # Audio file paths + sprite config
+│   ├── fileTree.ts                # Composer — imports all sections, exports root Folder
+│   ├── texts.ts                   # All long text content (status, email bodies, etc.)
+│   └── sections/                  # One file per top-level folder area
+│       ├── apresentacao.ts        # Folder id: "presentation"
+│       ├── mapa.ts                # Folder id: "map"
+│       ├── emails.ts              # Folder id: "emails"
+│       ├── documentos.ts          # Folder id: "audio-files" (indenização)
+│       └── setores.ts             # Folder id: "setores"
 ├── hooks/
 │   ├── useAudio.ts                # Howler wrapper (play, stop, volume)
 │   ├── useAudio.test.ts
@@ -399,7 +434,8 @@ src/
 ├── lib/
 │   ├── audio.ts                   # Howler init, sprite sheet loader
 │   ├── theme.ts                   # Palette resolver, CSS var injector
-│   └── format.ts                  # Text formatting helpers
+│   ├── format.ts                  # Text formatting helpers
+│   └── tree.ts                    # findFolder + pathToFolder (shared tree utilities)
 ├── types/
 │   └── index.ts                   # All interfaces and type unions
 └── App.tsx                        # Root: GameContext + TerminalFrame + CRTOverlay

@@ -27,8 +27,8 @@ export interface InteractableFile {
   activeLabel: string;
   inactiveLabel: string;
   defaultState: boolean;
-  activateAudio?: AudioFile;
   oneWay?: boolean;
+  activateAudio?: string; // src path — plays as a one-shot sound on activation
 }
 
 export interface StatusFile {
