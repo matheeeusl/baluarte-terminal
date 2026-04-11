@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { AudioPlayer } from "@/components/gameplay/AudioPlayer";
 import { EmailPanel } from "@/components/ui/EmailPanel";
 import { ImagePanel } from "@/components/ui/ImagePanel";
@@ -11,16 +12,47 @@ interface Props {
   onAudioStop: () => void;
 }
 
-export function ActiveContent({ activeStatus, activeEmail, activeImage, activeAudio, onAudioStop }: Props) {
+export function ActiveContent({
+  activeStatus,
+  activeEmail,
+  activeImage,
+  activeAudio,
+  onAudioStop,
+}: Props) {
+  const statusRef = useRef<HTMLDivElement>(null);
+
+  const emailRef = useRef<HTMLDivElement>(null);
+
+  const activeStatusId = activeStatus?.id;
+  useEffect(() => {
+    if (activeStatusId) {
+      statusRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [activeStatusId]);
+
+  const activeEmailId = activeEmail?.id;
+  useEffect(() => {
+    if (activeEmailId) {
+      emailRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [activeEmailId]);
+
   return (
     <>
       {activeStatus && (
-        <div className="mt-auto border-t border-(--color-muted) pt-3 text-sm text-(--color-fg) font-terminal whitespace-pre-wrap">
+        <div
+          ref={statusRef}
+          className="mt-auto border-t border-(--color-muted) pt-3 text-sm text-(--color-fg) font-terminal whitespace-pre-wrap"
+        >
           <p className="text-(--color-accent) mb-1">{activeStatus.name}</p>
           {activeStatus.text}
         </div>
       )}
-      {activeEmail && <EmailPanel key={activeEmail.id} email={activeEmail} />}
+      {activeEmail && (
+        <div ref={emailRef}>
+          <EmailPanel key={activeEmail.id} email={activeEmail} />
+        </div>
+      )}
       {activeImage && <ImagePanel image={activeImage} />}
       {activeAudio && (
         <div className="mt-auto border-t border-(--color-muted) pt-3">

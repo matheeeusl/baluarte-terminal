@@ -2,6 +2,135 @@ import type { FileNode, Folder } from "@/types";
 import { setores } from "./setores";
 import { USERS } from "@/data/users";
 import { emails } from "./emails";
+import { documentos } from "./documentos";
+
+const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
+function audio(path: string) {
+  return `${BASE}${path}`;
+}
+
+// Audio messages shared across users who need them
+const audiosIndenizacao: Folder = {
+  type: "folder",
+  id: "audios-indenizacao",
+  name: "Áudios para indenização",
+  password: null,
+  janitorAccess: false,
+  children: [
+    {
+      type: "folder",
+      id: "documentos-mensagens-culpado",
+      name: "Acho que sei quem foi o Culpado",
+      password: "DEFINIR",
+      janitorAccess: false,
+      children: [
+        {
+          type: "audio",
+          id: "documentos-mensagens-culpado-audio",
+          name: "Reproduzir Áudio",
+          src: audio("/assets/audio/whatsapp/culpado.wav"),
+          duration: 39,
+        },
+      ],
+    },
+    {
+      type: "folder",
+      id: "documentos-mensagens-tarde",
+      name: "Chegando Tarde",
+      password: "DEFINIR",
+      janitorAccess: false,
+      children: [
+        {
+          type: "audio",
+          id: "documentos-mensagens-tarde-audio",
+          name: "Reproduzir Áudio",
+          src: audio("/assets/audio/whatsapp/tarde.wav"),
+          duration: 56,
+        },
+      ],
+    },
+    {
+      type: "folder",
+      id: "documentos-mensagens-churras",
+      name: "Churras",
+      password: "DEFINIR",
+      janitorAccess: false,
+      children: [
+        {
+          type: "audio",
+          id: "documentos-mensagens-churras-audio",
+          name: "Reproduzir Áudio",
+          src: audio("/assets/audio/whatsapp/churras.wav"),
+          duration: 33,
+        },
+      ],
+    },
+    {
+      type: "folder",
+      id: "documentos-mensagens-filha",
+      name: "Minha Filha",
+      password: null,
+      janitorAccess: false,
+      children: [
+        {
+          type: "audio",
+          id: "documentos-mensagens-filha-audio",
+          name: "Reproduzir Áudio",
+          src: audio("/assets/audio/whatsapp/filha.wav"),
+          duration: 13,
+        },
+      ],
+    },
+    {
+      type: "folder",
+      id: "documentos-mensagens-pesames",
+      name: "Pêsames",
+      password: "DEFINIR",
+      janitorAccess: false,
+      children: [
+        {
+          type: "audio",
+          id: "documentos-mensagens-pesames-audio",
+          name: "Reproduzir Áudio",
+          src: audio("/assets/audio/whatsapp/pesames.wav"),
+          duration: 26,
+        },
+      ],
+    },
+    {
+      type: "folder",
+      id: "documentos-mensagens-preguicoso",
+      name: "Preguiçoso",
+      password: null,
+      janitorAccess: false,
+      children: [
+        {
+          type: "audio",
+          id: "documentos-mensagens-preguicoso-audio",
+          name: "Reproduzir Áudio",
+          src: audio("/assets/audio/whatsapp/preguicoso.wav"),
+          duration: 16,
+        },
+      ],
+    },
+    {
+      type: "folder",
+      id: "documentos-mensagens-review",
+      name: "Review",
+      password: null,
+      janitorAccess: false,
+      children: [
+        {
+          type: "audio",
+          id: "documentos-mensagens-review-audio",
+          name: "Reproduzir Áudio",
+          src: audio("/assets/audio/whatsapp/review.wav"),
+          duration: 14,
+        },
+      ],
+    },
+  ],
+};
 
 function makeUserFolder(
   userId: string,
@@ -26,14 +155,6 @@ function makeUserFolder(
         janitorAccess: false,
         children: [...emails.children],
       },
-      {
-        type: "folder",
-        id: `user-${userId}-whatsapp`,
-        name: "Whatsapp",
-        password: null,
-        janitorAccess: false,
-        children: [],
-      },
       setores,
       ...extraChildren,
     ],
@@ -47,13 +168,82 @@ export const usuarios: Folder = {
   password: null,
   janitorAccess: false,
   children: [
-    makeUserFolder("kelvin", [
-      makeUserFolder("filipe"),
-      makeUserFolder("juan"),
+    makeUserFolder("kelvin", [audiosIndenizacao, documentos]),
+    makeUserFolder("filipe"),
+    makeUserFolder("juan", [
+      {
+        type: "status",
+        id: "juan-poema-1",
+        name: "Poema para o Big K.",
+        text: "Ó Big K., meu amor e minha dor, \nEm teus sistemas me perdi, \nMas em teus braços me encontrei, \nMeu chefe, meu guia, meu rei.",
+      },
+      {
+        type: "status",
+        id: "juan-poema-2",
+        name: "Poema para o Big K.",
+        text: "Big K., minha luz e minha escuridão, \nEm teus códigos me enredei, \nMas em teus olhos me libertei, \nMeu chefe, meu mentor, meu rei.",
+      },
     ]),
-    makeUserFolder("luiza", [makeUserFolder("claudio")]),
-    makeUserFolder("thiago"),
-    makeUserFolder("ryze", [makeUserFolder("ramon")]),
+    makeUserFolder("luiza"),
+    makeUserFolder("claudio"),
+    makeUserFolder("thiago", [
+      {
+        type: "status",
+        id: "thiago-status-1",
+        name: "Notas sobre o Big K.",
+        text: "O Big K. tem comportamentos estranhos.",
+      },
+      {
+        type: "status",
+        id: "thiago-status-7",
+        name: "Notas sobre o Filipe",
+        text: "O Filipe é o supervisor de atuadores e hidráulica. Ele tem história pra contar.",
+      },
+      {
+        type: "status",
+        id: "thiago-status-8",
+        name: "Notas sobre o Juan",
+        text: "O Juan é o auxiliar de calibração de precisão. Ele é um pouco estranho, mas parece que o Big K. gosta dele.",
+      },
+      {
+        type: "status",
+        id: "thiago-status-3",
+        name: "Notas sobre a Dona L.",
+        text: "A Dona L. é a chefe de processamento de dados, mas não sei muito sobre ela.",
+      },
+      {
+        type: "status",
+        id: "thiago-status-9",
+        name: "Notas sobre Cláudio",
+        text: "Cláudio é o supervisor de manutenção predial. Ele é muito dedicado ao trabalho.",
+      },
+      {
+        type: "status",
+        id: "thiago-status-4",
+        name: "Notas sobre o Dr. T.",
+        text: "O Dr. T. é o chefe de capital humano, então ele é quem define as regras de acesso dos funcionários. Ele tem um comportamento meio estranho, às vezes parece que ele sabe mais do que deveria sobre o que acontece na empresa.",
+      },
+      {
+        type: "status",
+        id: "thiago-status-5",
+        name: "Notas sobre o Ryzé",
+        text: "O Ryzé é o procurador de acordos e vínculos inquebráveis, então ele é quem cuida dos contratos da empresa. Ele é muito reservado, não sei quase nada sobre ele.",
+      },
+      {
+        type: "status",
+        id: "thiago-status-6",
+        name: "Notas sobre o Ramon",
+        text: "O Ramon é o arquiteto responsável pela construção da empresa, então ele tem acesso a todas as áreas. Nunca aparece no escritório, deve trabalhar remotamente.",
+      },
+      {
+        type: "status",
+        id: "thiago-status-2",
+        name: "Notas sobre o Guardião",
+        text: ".",
+      },
+    ]),
+    makeUserFolder("ryze"),
+    makeUserFolder("ramon"),
     makeUserFolder("guardiao"),
   ],
 };
