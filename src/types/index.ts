@@ -9,7 +9,6 @@ interface BaseNode {
 
 export interface Folder extends BaseNode {
   type: "folder";
-  password: string | null;
   janitorAccess: boolean;
   isUserRoot?: string; // user ID this folder authenticates as
   children: FileNode[];
@@ -30,7 +29,6 @@ export interface InteractableFile extends BaseNode {
   defaultState: boolean;
   oneWay?: boolean;
   activateAudio?: string; // src path — plays as a one-shot sound on activation
-  password?: string; // if set, requires password before toggle
 }
 
 export interface StatusFile extends BaseNode {
@@ -55,7 +53,14 @@ export interface JanitorControlFile extends BaseNode {
   type: "janitor-control";
 }
 
-export type FileNode = Folder | AudioFile | InteractableFile | StatusFile | EmailFile | ImageFile | JanitorControlFile;
+export type FileNode =
+  | Folder
+  | AudioFile
+  | InteractableFile
+  | StatusFile
+  | EmailFile
+  | ImageFile
+  | JanitorControlFile;
 
 export interface PasswordGate {
   folderId: string;
