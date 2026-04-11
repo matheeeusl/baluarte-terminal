@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { gameReducer, getInitialState, ADMIN_PASSWORD } from "./GameReducer";
+import { gameReducer, getInitialState } from "./GameReducer";
 import type { GameState } from "@/types";
 
 function state(overrides?: Partial<GameState>): GameState {
@@ -30,6 +30,14 @@ describe("GameReducer", () => {
       expect(next.phase).toBe("BOOT");
     });
 
+    it("resets currentUser to null on power off", () => {
+      const next = gameReducer(
+        state({ currentUser: "kelvin", phase: "AUTHENTICATED" }),
+        { type: "POWER_OFF" }
+      );
+      expect(next.currentUser).toBeNull();
+    });
+
     it("preserves theme on power off", () => {
       const next = gameReducer(
         state({ power: true, theme: "amber" }),
@@ -44,20 +52,32 @@ describe("GameReducer", () => {
     });
   });
 
-  describe("LOGIN_ADMIN", () => {
-    it("transitions to AUTHENTICATED with correct password", () => {
+  describe("SET_CURRENT_USER", () => {
+    it("sets currentUser and transitions to AUTHENTICATED", () => {
       const next = gameReducer(state({ phase: "GUEST" }), {
-        type: "LOGIN_ADMIN",
-        password: ADMIN_PASSWORD,
+        type: "SET_CURRENT_USER",
+        userId: "kelvin",
       });
+      expect(next.currentUser).toBe("kelvin");
       expect(next.phase).toBe("AUTHENTICATED");
     });
 
-    it("stays in GUEST with wrong password", () => {
-      const next = gameReducer(state({ phase: "GUEST" }), {
-        type: "LOGIN_ADMIN",
-        password: "WRONG",
-      });
+    it("replaces the current user when called again", () => {
+      const next = gameReducer(
+        state({ currentUser: "kelvin", phase: "AUTHENTICATED" }),
+        { type: "SET_CURRENT_USER", userId: "luiza" }
+      );
+      expect(next.currentUser).toBe("luiza");
+    });
+  });
+
+  describe("LOGOUT_USER", () => {
+    it("clears currentUser and transitions to GUEST", () => {
+      const next = gameReducer(
+        state({ currentUser: "kelvin", phase: "AUTHENTICATED" }),
+        { type: "LOGOUT_USER" }
+      );
+      expect(next.currentUser).toBeNull();
       expect(next.phase).toBe("GUEST");
     });
   });

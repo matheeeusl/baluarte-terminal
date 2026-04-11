@@ -18,7 +18,6 @@ export const emails: Folder = {
   name: "Emails",
   password: null,
   janitorAccess: true,
-  adminOnly: false,
   children: [
     {
       type: "email",
@@ -31,6 +30,7 @@ export const emails: Folder = {
       id: "emails-cafeteria",
       name: "Arquivo de áudio (Cafeteria)",
       text: TEXT_EMAIL_AUDIO,
+      visibleTo: ["kelvin", "juan"],
       attachment: {
         type: "audio",
         id: "emails-cafeteria-audio",
@@ -38,19 +38,20 @@ export const emails: Folder = {
         src: audio("/assets/audio/FCs2.wav"),
         duration: 95,
       },
-      adminOnly: false,
     },
     {
       type: "email",
       id: "emails-vazado-2",
       name: "CALOTEIRO, ESTÁ DESTRUINDO O NEGÓCIO LOCAL!!! (Pedido #4409)",
       text: TEXT_EMAIL_VAZADO_2,
+      visibleTo: ["kelvin", "juan"],
     },
     {
       type: "email",
       id: "emails-vazado-3",
       name: "Caiu um drone no Setor 04, novamente...",
       text: TEXT_EMAIL_VAZADO_3,
+      visibleTo: ["kelvin", "juan"],
     },
     {
       type: "folder",
@@ -58,7 +59,7 @@ export const emails: Folder = {
       name: "RE: Relatório de peças danificadas / Revisão de Orçamento Urgente",
       password: "Ks2J",
       janitorAccess: false,
-      adminOnly: false,
+      visibleTo: ["kelvin", "juan"],
       children: [
         {
           type: "email",

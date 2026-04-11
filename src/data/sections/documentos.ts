@@ -11,7 +11,6 @@ export const documentos: Folder = {
   name: "Documentos para idenização",
   password: null,
   janitorAccess: true,
-  adminOnly: true,
   children: [
     {
       type: "folder",
@@ -19,7 +18,6 @@ export const documentos: Folder = {
       name: "Mensagens",
       password: null,
       janitorAccess: true,
-      adminOnly: true,
       children: [
         {
           type: "folder",
@@ -27,7 +25,6 @@ export const documentos: Folder = {
           name: "Acho que sei quem foi o Culpado",
           password: "DEFINIR",
           janitorAccess: false,
-          adminOnly: true,
           children: [
             {
               type: "audio",
@@ -44,7 +41,6 @@ export const documentos: Folder = {
           name: "Chegando Tarde",
           password: "DEFINIR",
           janitorAccess: false,
-          adminOnly: true,
           children: [
             {
               type: "audio",
@@ -61,7 +57,6 @@ export const documentos: Folder = {
           name: "Churras",
           password: "DEFINIR",
           janitorAccess: false,
-          adminOnly: true,
           children: [
             {
               type: "audio",
@@ -78,7 +73,6 @@ export const documentos: Folder = {
           name: "Minha Filha",
           password: null,
           janitorAccess: false,
-          adminOnly: true,
           children: [
             {
               type: "audio",
@@ -95,7 +89,6 @@ export const documentos: Folder = {
           name: "Pêsames",
           password: "DEFINIR",
           janitorAccess: false,
-          adminOnly: true,
           children: [
             {
               type: "audio",
@@ -112,7 +105,6 @@ export const documentos: Folder = {
           name: "Preguiçoso",
           password: null,
           janitorAccess: false,
-          adminOnly: true,
           children: [
             {
               type: "audio",
@@ -129,7 +121,6 @@ export const documentos: Folder = {
           name: "Review",
           password: null,
           janitorAccess: false,
-          adminOnly: true,
           children: [
             {
               type: "audio",
@@ -148,7 +139,6 @@ export const documentos: Folder = {
       name: "Gravações",
       password: null,
       janitorAccess: true,
-      adminOnly: true,
       children: [
         {
           type: "folder",
@@ -156,7 +146,6 @@ export const documentos: Folder = {
           name: "$h17",
           password: "DEFINIR",
           janitorAccess: false,
-          adminOnly: true,
           children: [
             {
               type: "audio",
@@ -173,7 +162,6 @@ export const documentos: Folder = {
           name: "4dm1n",
           password: null,
           janitorAccess: false,
-          adminOnly: true,
           children: [
             {
               type: "audio",
@@ -190,7 +178,6 @@ export const documentos: Folder = {
           name: "C4m1s4",
           password: "DEFINIR",
           janitorAccess: false,
-          adminOnly: true,
           children: [
             {
               type: "audio",
@@ -207,7 +194,6 @@ export const documentos: Folder = {
           name: "Gh0s7",
           password: "DEFINIR",
           janitorAccess: false,
-          adminOnly: true,
           children: [
             {
               type: "audio",
@@ -224,7 +210,6 @@ export const documentos: Folder = {
           name: "R0c%",
           password: null,
           janitorAccess: false,
-          adminOnly: true,
           children: [
             {
               type: "audio",

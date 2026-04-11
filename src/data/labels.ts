@@ -20,8 +20,8 @@ export const SHUTDOWN_STEPS = [
 ];
 
 // --- Home menu ---
-export const LABEL_ADMIN_LOGIN = "Login Administrador";
-export const LABEL_GUEST_ACCESS = "Acesso Visitante";
+export const LABEL_USERS = "Usuários";
+export const LABEL_PUBLIC = "Público";
 export const LABEL_SETTINGS = "Configurações";
 export const LABEL_CHOOSE_OPTION = "Escolha uma opção:";
 

@@ -34,11 +34,14 @@ export function useFileSystem() {
   const canAccess = useCallback(
     (node: FileNode): boolean => {
       if (node.type !== "folder") return true;
-      if (node.adminOnly && state.phase !== "AUTHENTICATED") return false;
+      if (node.visibleTo && node.visibleTo.length > 0) {
+        if (!state.currentUser) return false;
+        if (!node.visibleTo.includes(state.currentUser)) return false;
+      }
       if (node.password === null) return true;
       return state.unlockedFolders.has(node.id);
     },
-    [state.phase, state.unlockedFolders]
+    [state.currentUser, state.unlockedFolders]
   );
 
   return {

@@ -10,9 +10,8 @@ export const mapa: Folder = {
   type: "folder",
   id: "mapa",
   name: "Mapa",
-  password: "asdfasdfasdf",
+  password: "DEFINIR",
   janitorAccess: false,
-  adminOnly: false,
   children: [
     {
       type: "image",

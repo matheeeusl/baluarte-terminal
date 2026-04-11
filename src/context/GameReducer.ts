@@ -1,7 +1,6 @@
 import type { GameState, GameEvent } from "@/types";
 import { fileTree } from "@/data/fileTree";
 
-export const ADMIN_PASSWORD = "ROBCO";
 const KNOB1_STEP = 15;
 const KNOB2_STEP = 90;
 
@@ -11,6 +10,7 @@ export function getInitialState(): GameState {
 
   return {
     phase: "BOOT",
+    currentUser: null,
     unlockedFolders: new Set<string>(),
     janitorOverrides: new Map<string, boolean>(),
     interactableStates,
@@ -54,11 +54,11 @@ export function gameReducer(state: GameState, event: GameEvent): GameState {
         knob2Rotation: state.knob2Rotation + KNOB2_STEP,
       };
 
-    case "LOGIN_ADMIN":
-      if (event.password === ADMIN_PASSWORD) {
-        return { ...state, phase: "AUTHENTICATED" };
-      }
-      return state;
+    case "SET_CURRENT_USER":
+      return { ...state, currentUser: event.userId, phase: "AUTHENTICATED" };
+
+    case "LOGOUT_USER":
+      return { ...state, currentUser: null, phase: "GUEST" };
 
     case "UNLOCK_FOLDER":
       // Password validation happens in the component; reducer only records the unlock

@@ -1,8 +1,8 @@
 import { useGame } from "@/context/GameContext";
 import { useJanitorActive } from "@/hooks/useJanitor";
+import { getUserById } from "@/data/users";
 import {
   LABEL_STATUS_ONLINE,
-  LABEL_USER_ADMIN,
   LABEL_USER_GUEST,
   LABEL_JANITOR,
   LABEL_JANITOR_ACTIVE,
@@ -18,12 +18,15 @@ export function StatusBlock({ currentPath }: StatusBlockProps) {
   const { state } = useGame();
   const janitorActive = useJanitorActive();
 
-  const user = state.phase === "AUTHENTICATED" ? LABEL_USER_ADMIN : LABEL_USER_GUEST;
+  const loggedUser = state.currentUser ? getUserById(state.currentUser) : null;
+  const userLabel = loggedUser
+    ? (loggedUser.displayId ?? loggedUser.name)
+    : LABEL_USER_GUEST;
 
   return (
     <div className="font-terminal text-sm text-(--color-fg) space-y-0.5">
       <p>{LABEL_STATUS_ONLINE}</p>
-      <p>Usuário: {user}</p>
+      <p>Usuário: {userLabel}</p>
       <p>
         {LABEL_JANITOR}:{" "}
         <span className={janitorActive ? "text-(--color-accent)" : ""}>

@@ -1,67 +1,58 @@
 export type ThemePalette = "green" | "amber" | "white";
 
-export interface Folder {
-  type: "folder";
+interface BaseNode {
   id: string;
   name: string;
+  visibleTo?: string[]; // if non-empty, only these user IDs can see this node
+  password?: string | null; // if set to a string, requires password before entering/activating/reading
+}
+
+export interface Folder extends BaseNode {
+  type: "folder";
   password: string | null;
   janitorAccess: boolean;
-  adminOnly: boolean;
+  isUserRoot?: string; // user ID this folder authenticates as
   children: FileNode[];
 }
 
-export interface AudioFile {
+export interface AudioFile extends BaseNode {
   type: "audio";
-  id: string;
-  name: string;
   src: string;
   duration: number;
   transcript?: string;
 }
 
-export interface InteractableFile {
+export interface InteractableFile extends BaseNode {
   type: "interactable";
-  id: string;
-  name: string;
   label: string;
   activeLabel: string;
   inactiveLabel: string;
   defaultState: boolean;
   oneWay?: boolean;
   activateAudio?: string; // src path — plays as a one-shot sound on activation
+  password?: string; // if set, requires password before toggle
 }
 
-export interface StatusFile {
+export interface StatusFile extends BaseNode {
   type: "status";
-  id: string;
-  name: string;
   text: string;
-  adminOnly?: boolean;
 }
 
-export interface EmailFile {
+export interface EmailFile extends BaseNode {
   type: "email";
-  id: string;
-  name: string;
   text: string;
-  adminOnly?: boolean;
   attachment?: AudioFile;
 }
 
-export interface ImageFile {
+export interface ImageFile extends BaseNode {
   type: "image";
-  id: string;
-  name: string;
   src: string;
   alt?: string;
   caption?: string;
-  adminOnly?: boolean;
 }
 
-export interface JanitorControlFile {
+export interface JanitorControlFile extends BaseNode {
   type: "janitor-control";
-  id: string;
-  name: string;
 }
 
 export type FileNode = Folder | AudioFile | InteractableFile | StatusFile | EmailFile | ImageFile | JanitorControlFile;
@@ -74,6 +65,7 @@ export interface PasswordGate {
 
 export interface GameState {
   phase: "BOOT" | "GUEST" | "AUTHENTICATED";
+  currentUser: string | null;
   unlockedFolders: Set<string>;
   janitorOverrides: Map<string, boolean>;
   interactableStates: Map<string, boolean>;
@@ -88,7 +80,8 @@ export interface GameState {
 export type GameEvent =
   | { type: "POWER_ON" }
   | { type: "POWER_OFF" }
-  | { type: "LOGIN_ADMIN"; password: string }
+  | { type: "SET_CURRENT_USER"; userId: string }
+  | { type: "LOGOUT_USER" }
   | { type: "UNLOCK_FOLDER"; folderId: string; password: string }
   | { type: "RECORD_FAILED_ATTEMPT"; folderId: string }
   | { type: "NAVIGATE"; nodeId: string }

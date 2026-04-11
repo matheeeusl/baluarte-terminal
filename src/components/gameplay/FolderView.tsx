@@ -1,14 +1,14 @@
-import { useState, useEffect } from "react";
 import { Howl } from "howler";
 import { useGame } from "@/context/GameContext";
+import { useProcessing } from "@/hooks/useProcessing";
+import { useFolderViewState } from "@/hooks/useFolderViewState";
 import { MenuList } from "@/components/ui/MenuList";
 import { StatusBlock } from "@/components/ui/StatusBlock";
 import { PasswordInput } from "@/components/ui/PasswordInput";
-import { AudioPlayer } from "@/components/gameplay/AudioPlayer";
+import { FolderPasswordGate } from "@/components/ui/FolderPasswordGate";
+import { ActiveContent } from "@/components/ui/ActiveContent";
 import { formatPath } from "@/lib/format";
 import { TerminalBrand } from "@/components/ui/TerminalBrand";
-import { fileTree } from "@/data/fileTree";
-import { findFolder } from "@/lib/tree";
 import {
   LABEL_CHOOSE_OPTION,
   LABEL_LOCKED,
@@ -18,11 +18,10 @@ import {
   LABEL_PROCESSING,
 } from "@/data/labels";
 import type { MenuItem } from "@/components/ui/MenuList";
-import type { AudioFile, EmailFile, FileNode, ImageFile, InteractableFile, StatusFile } from "@/types";
+import type { FileNode, InteractableFile } from "@/types";
 import type { useFileSystem } from "@/hooks/useFileSystem";
 
 type FileSystem = ReturnType<typeof useFileSystem>;
-
 
 const ICONS: Record<string, string> = {
   folder: "📁",
@@ -41,99 +40,146 @@ interface Props {
 export function FolderView({ fileSystem }: Props) {
   const { state, dispatch } = useGame();
   const { currentFolder, pathStack, navigate, goBack, canAccess } = fileSystem;
-  const isAdmin = state.phase === "AUTHENTICATED";
-  const [showPassword, setShowPassword] = useState<string | null>(null);
-  const [activeAudio, setActiveAudio] = useState<AudioFile | null>(null);
-  const [activeStatus, setActiveStatus] = useState<StatusFile | null>(null);
-  const [activeEmail, setActiveEmail] = useState<EmailFile | null>(null);
-  const [activeImage, setActiveImage] = useState<ImageFile | null>(null);
-  const [emailAudio, setEmailAudio] = useState<AudioFile | null>(null);
-  const [processing, setProcessing] = useState<Set<string>>(new Set());
-
-  useEffect(() => {
-    setShowPassword(null);
-    setActiveAudio(null);
-    setActiveStatus(null);
-    setActiveEmail(null);
-    setEmailAudio(null);
-    setActiveImage(null);
-  }, [currentFolder.id]);
-
-  const PROCESSING_DELAY = 1500;
-
-  function withProcessing(id: string, action: () => void) {
-    setProcessing((prev) => new Set(prev).add(id));
-    setTimeout(() => {
-      action();
-      setProcessing((prev) => {
-        const next = new Set(prev);
-        next.delete(id);
-        return next;
-      });
-    }, PROCESSING_DELAY);
-  }
+  const { processing, withProcessing } = useProcessing();
+  const s = useFolderViewState(currentFolder.id);
 
   const visibleChildren = currentFolder.children.filter((node) => {
-    if (node.type === "folder" && node.adminOnly && !isAdmin) return false;
-    if (node.type === "status" && node.adminOnly && !isAdmin) return false;
-    if (node.type === "email" && node.adminOnly && !isAdmin) return false;
-    if (node.type === "image" && node.adminOnly && !isAdmin) return false;
+    if (node.visibleTo && node.visibleTo.length > 0) {
+      if (!state.currentUser) return false;
+      if (!node.visibleTo.includes(state.currentUser)) return false;
+    }
     return true;
   });
 
-  // Interactables in this folder — used for room status display and labels
   const interactables = visibleChildren.filter(
     (n): n is InteractableFile => n.type === "interactable",
   );
-
-  function janitorControlLabel(): string {
-    const granted =
-      state.janitorOverrides.get(currentFolder.id) ??
-      currentFolder.janitorAccess;
-    return granted ? LABEL_JANITOR_REVOKE : LABEL_JANITOR_GRANT;
-  }
 
   function interactableLabel(node: InteractableFile): string {
     const active = state.interactableStates.get(node.id) ?? node.defaultState;
     return active ? node.activeLabel : node.inactiveLabel;
   }
 
+  function janitorControlLabel(): string {
+    const granted = state.janitorOverrides.get(currentFolder.id) ?? currentFolder.janitorAccess;
+    return granted ? LABEL_JANITOR_REVOKE : LABEL_JANITOR_GRANT;
+  }
+
+  function isNodeLocked(node: FileNode): boolean {
+    if (node.type === "folder") return !!node.password && !canAccess(node);
+    return !!node.password && !s.unlockedNodes.has(node.id);
+  }
+
   function fileNodeToMenuItem(node: FileNode): MenuItem {
+    const locked = isNodeLocked(node);
+    const lockSuffix = locked ? ` ${LABEL_LOCKED}` : "";
+
     if (node.type === "interactable") {
       const isProcessing = processing.has(node.id);
       const isActive = state.interactableStates.get(node.id) ?? node.defaultState;
-      const isLocked = node.oneWay && isActive;
       return {
         id: node.id,
-        label: isProcessing ? LABEL_PROCESSING : interactableLabel(node),
+        label: isProcessing ? LABEL_PROCESSING : interactableLabel(node) + lockSuffix,
         icon: ICONS.interactable,
-        disabled: isProcessing || isLocked,
+        disabled: isProcessing || (node.oneWay === true && isActive),
       };
     }
     if (node.type === "janitor-control") {
       const isProcessing = processing.has(node.id);
       return {
         id: node.id,
-        label: isProcessing ? LABEL_PROCESSING : janitorControlLabel(),
+        label: isProcessing ? LABEL_PROCESSING : janitorControlLabel() + lockSuffix,
         icon: ICONS["janitor-control"],
         disabled: isProcessing,
       };
     }
-    const locked = node.type === "folder" && node.password && !canAccess(node);
     return {
       id: node.id,
-      label: node.name + (locked ? ` ${LABEL_LOCKED}` : ""),
+      label: node.name + lockSuffix,
       icon: ICONS[node.type],
       disabled: false,
     };
   }
 
+  function executeNodeAction(node: FileNode) {
+    if (node.type === "interactable") {
+      const currentlyActive = state.interactableStates.get(node.id) ?? node.defaultState;
+      withProcessing(node.id, () => {
+        dispatch({ type: "TOGGLE_INTERACTABLE", fileId: node.id });
+        if (!currentlyActive && node.activateAudio) {
+          new Howl({ src: [node.activateAudio], html5: true }).play();
+        }
+      });
+      return;
+    }
+    if (node.type === "janitor-control") {
+      const granted = state.janitorOverrides.get(currentFolder.id) ?? currentFolder.janitorAccess;
+      withProcessing(node.id, () =>
+        dispatch({
+          type: granted ? "REVOKE_JANITOR_ACCESS" : "GRANT_JANITOR_ACCESS",
+          folderId: currentFolder.id,
+        }),
+      );
+      return;
+    }
+    if (node.type === "audio") {
+      s.setActiveAudio(node);
+      s.setActiveStatus(null);
+      return;
+    }
+    if (node.type === "status") {
+      s.setActiveStatus(s.activeStatus?.id === node.id ? null : node);
+      s.setActiveAudio(null);
+      s.setActiveEmail(null);
+      return;
+    }
+    if (node.type === "image") {
+      s.setActiveImage(s.activeImage?.id === node.id ? null : node);
+      s.setActiveStatus(null);
+      s.setActiveEmail(null);
+      s.setActiveAudio(null);
+      return;
+    }
+    if (node.type === "email") {
+      s.setActiveEmail(s.activeEmail?.id === node.id ? null : node);
+      s.setActiveStatus(null);
+      s.setActiveAudio(null);
+      return;
+    }
+  }
+
+  function handleSelect(item: MenuItem) {
+    if (item.id === "__back") { goBack(); return; }
+
+    const node = visibleChildren.find((n) => n.id === item.id);
+    if (!node) return;
+
+    if (node.type === "folder") {
+      if (!canAccess(node)) {
+        s.setShowPassword(node.id);
+      } else {
+        if (node.isUserRoot) dispatch({ type: "SET_CURRENT_USER", userId: node.isUserRoot });
+        navigate(node.id);
+      }
+      return;
+    }
+
+    if (node.password && !s.unlockedNodes.has(node.id)) {
+      s.setPendingPasswordNode(node.id);
+      return;
+    }
+
+    executeNodeAction(node);
+  }
+
   const items: MenuItem[] = [
     ...visibleChildren.map(fileNodeToMenuItem),
-    ...(pathStack.length > 1
-      ? [{ id: "__back", label: LABEL_BACK, icon: "◄" }]
-      : []),
+    ...(pathStack.length > 1 ? [{ id: "__back", label: LABEL_BACK, icon: "◄" }] : []),
   ];
+
+  const pendingNode = s.pendingPasswordNode
+    ? visibleChildren.find((n) => n.id === s.pendingPasswordNode)
+    : null;
 
   return (
     <div className="flex h-full flex-col gap-3 p-10 font-terminal overflow-auto">
@@ -142,7 +188,6 @@ export function FolderView({ fileSystem }: Props) {
       </h1>
       <StatusBlock currentPath={formatPath(pathStack)} />
 
-      {/* Room status: current state of all interactables in this folder */}
       {interactables.length > 0 && (
         <div className="text-sm text-(--color-fg) space-y-0.5">
           {interactables.map((node) => (
@@ -153,156 +198,37 @@ export function FolderView({ fileSystem }: Props) {
 
       <hr className="border-(--color-muted)" />
       <p className="text-sm text-(--color-fg)">{LABEL_CHOOSE_OPTION}</p>
-      <MenuList
-        items={items}
-        onSelect={(item) => {
-          if (item.id === "__back") {
-            goBack();
-            return;
-          }
-          const node = visibleChildren.find((n) => n.id === item.id);
-          if (!node) return;
+      <MenuList items={items} onSelect={handleSelect} onBack={goBack} />
 
-          if (node.type === "folder") {
-            if (!canAccess(node)) {
-              setShowPassword(node.id);
-            } else {
-              navigate(node.id);
-            }
-            return;
-          }
-
-          if (node.type === "interactable") {
-            const currentlyActive =
-              state.interactableStates.get(node.id) ?? node.defaultState;
-            withProcessing(node.id, () => {
-              dispatch({ type: "TOGGLE_INTERACTABLE", fileId: node.id });
-              if (!currentlyActive && node.activateAudio) {
-                new Howl({ src: [node.activateAudio], html5: true }).play();
-              }
-            });
-            return;
-          }
-
-          if (node.type === "janitor-control") {
-            const granted =
-              state.janitorOverrides.get(currentFolder.id) ??
-              currentFolder.janitorAccess;
-            withProcessing(node.id, () =>
-              dispatch({
-                type: granted ? "REVOKE_JANITOR_ACCESS" : "GRANT_JANITOR_ACCESS",
-                folderId: currentFolder.id,
-              }),
-            );
-            return;
-          }
-
-          if (node.type === "audio") {
-            setActiveAudio(node);
-            setActiveStatus(null);
-            return;
-          }
-
-          if (node.type === "status") {
-            setActiveStatus(activeStatus?.id === node.id ? null : node);
-            setActiveAudio(null);
-            setActiveEmail(null);
-            return;
-          }
-
-          if (node.type === "image") {
-            setActiveImage(activeImage?.id === node.id ? null : node);
-            setActiveStatus(null);
-            setActiveEmail(null);
-            setActiveAudio(null);
-            return;
-          }
-
-          if (node.type === "email") {
-            const next = activeEmail?.id === node.id ? null : node;
-            setActiveEmail(next);
-            setEmailAudio(null);
-            setActiveStatus(null);
-            setActiveAudio(null);
-            return;
-          }
-        }}
-        onBack={goBack}
+      <ActiveContent
+        activeStatus={s.activeStatus}
+        activeEmail={s.activeEmail}
+        activeImage={s.activeImage}
+        activeAudio={s.activeAudio}
+        onAudioStop={() => s.setActiveAudio(null)}
       />
-      {activeStatus && (
-        <div className="mt-auto border-t border-(--color-muted) pt-3 text-sm text-(--color-fg) font-terminal whitespace-pre-wrap">
-          <p className="text-(--color-accent) mb-1">{activeStatus.name}</p>
-          {activeStatus.text}
-        </div>
-      )}
-      {activeEmail && (
-        <div className="mt-auto border-t border-(--color-muted) pt-3 text-sm text-(--color-fg) font-terminal space-y-3">
-          <p className="text-(--color-accent)">{activeEmail.name}</p>
-          <p className="whitespace-pre-wrap">{activeEmail.text}</p>
-          {activeEmail.attachment && (
-            <div className="border-t border-(--color-muted) pt-2">
-              {emailAudio ? (
-                <AudioPlayer
-                  file={emailAudio}
-                  onStop={() => setEmailAudio(null)}
-                />
-              ) : (
-                <button
-                  className="flex items-center gap-2 cursor-pointer hover:text-(--color-accent) transition-colors"
-                  onClick={() => activeEmail.attachment && setEmailAudio(activeEmail.attachment)}
-                >
-                  <span>🔊</span>
-                  <span>{activeEmail.attachment.name}</span>
-                </button>
-              )}
-            </div>
-          )}
-        </div>
-      )}
-      {activeImage && (
-        <div className="mt-auto border-t border-(--color-muted) pt-3 text-sm text-(--color-fg) font-terminal space-y-3">
-          <p className="text-(--color-accent)">{activeImage.name}</p>
-          <img
-            src={activeImage.src}
-            alt={activeImage.alt ?? activeImage.name}
-            className="w-full object-contain border border-(--color-muted)"
-          />
-          {activeImage.caption && (
-            <p className="whitespace-pre-wrap">{activeImage.caption}</p>
-          )}
-        </div>
-      )}
-      {activeAudio && (
-        <div className="mt-auto border-t border-(--color-muted) pt-3">
-          <AudioPlayer
-            file={activeAudio}
-            onStop={() => setActiveAudio(null)}
+
+      {s.showPassword && (
+        <div className="mt-auto">
+          <FolderPasswordGate
+            folderId={s.showPassword}
+            onSuccess={(id) => { s.setShowPassword(null); navigate(id); }}
+            onCancel={() => s.setShowPassword(null)}
           />
         </div>
       )}
-      {showPassword && (
+
+      {pendingNode && (
         <div className="mt-auto">
           <PasswordInput
-            key={showPassword}
-            folderName={findFolder(showPassword, fileTree)?.name}
-            initialAttempts={state.failedAttempts.get(showPassword) ?? 0}
-            validate={(pw) => {
-              const folder = findFolder(showPassword, fileTree);
-              return folder?.password?.toUpperCase() === pw.toUpperCase();
+            key={pendingNode.id}
+            validate={(pw) => pendingNode.password?.toUpperCase() === pw.toUpperCase()}
+            onSubmit={() => {
+              s.unlockNode(pendingNode.id);
+              s.setPendingPasswordNode(null);
+              executeNodeAction(pendingNode);
             }}
-            onFailure={() =>
-              dispatch({ type: "RECORD_FAILED_ATTEMPT", folderId: showPassword })
-            }
-            onSubmit={(pw) => {
-              dispatch({
-                type: "UNLOCK_FOLDER",
-                folderId: showPassword,
-                password: pw,
-              });
-              setShowPassword(null);
-              navigate(showPassword);
-            }}
-            onCancel={() => setShowPassword(null)}
+            onCancel={() => s.setPendingPasswordNode(null)}
           />
         </div>
       )}
