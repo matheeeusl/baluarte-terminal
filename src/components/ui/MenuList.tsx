@@ -60,7 +60,7 @@ export function MenuList({ items, onSelect, onBack }: MenuListProps) {
           }}
           onFocus={() => setActiveIndex(i)}
           className={[
-            "cursor-pointer select-none px-2 py-0.5 font-terminal",
+            "cursor-pointer select-none px-2 py-0.5 font-terminal outline-none",
             item.disabled
               ? "opacity-40 cursor-not-allowed"
               : "hover:bg-(--color-muted)",

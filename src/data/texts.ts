@@ -29,7 +29,7 @@ Agora usamos:
 
 export const TEXT_EMAIL_VAZADO_1 = `\
 De: ofertas.sigilosas.saude@promocoesweb.com
-Para: Kelvin_l.c@hotmail.com
+Para: kelvinluizcardoso@gmail.com
 
 Cansado de ter um "equipamento" que não impressiona na hora que mais importa? Nossa nova fórmula desenvolvida com nanotecnologia de ponta garante um aumento significativo de comprimento e espessura! Volte a ter o vigor de uma máquina recém-saída da fábrica e energia que dura a noite toda.
 
@@ -46,7 +46,7 @@ Fale diretamente com o Joilson! Ele é o nosso consultor VIP e vai preparar o se
 
 export const TEXT_EMAIL_VAZADO_2 = `\
 De: contato@padariadoisirmaos.com.br
-Para: Kelvin_l.c@hotmail.com
+Para: kelvinluizcardoso@gmail.com
 
 Escuta aqui, Kelvin,
 
@@ -65,7 +65,7 @@ Ademar, o terceiro irmão que fica no caixa.`;
 
 export const TEXT_EMAIL_VAZADO_3 = `\
 De: logistica.manutencao.setor02@redeinterna.com
-Para: Kelvin_l.c@hotmail.com
+Para: kelvinluizcardoso@gmail.com
 
 Chefe Kelvin,
 
@@ -80,7 +80,7 @@ Equipe de Manutenção - Turno da Manhã`;
 
 export const TEXT_EMAIL_AUDIO = `\
 De: [REMETENTE OCULTO] id_criptografado_883@redeinterna.com
-Para: Kelvin_l.c@hotmail.com
+Para: kelvinluizcardoso@gmail.com
 
 Hey Chefia,
 
@@ -92,8 +92,8 @@ Fico no aguardo de novas instruções, ou se eu ouvir mais algo de interessante,
 `;
 
 export const TEXT_EMAIL_VAZADO_4 = `\
-**De:** juan.suprimentos@setor02.com 
-**Para:** Kelvin_l.c@hotmail.com 
+**De:** juanpablolopes05@gmail.com 
+**Para:** kelvinluizcardoso@gmail.com 
 
 Kelvin, meu bem,
 
@@ -111,3 +111,37 @@ Estou contando os minutos.
 
 Com todo o meu amor.
 **Juan**`;
+
+export const TEXT_EMAIL_BANHEIRO = `\
+De: barcellospsicologia@gmail.com
+Para: Todos
+
+Prezados colegas,
+
+Preciso comunicar um incidente de manutenção ocorrido esta semana nos banheiros da Unidade.
+
+Foram registrados múltiplos casos de entupimento nos vasos sanitários de três andares distintos. Após inspeção da equipe da Zeladoria, foi identificado como causa principal o acúmulo excessivo de pelos no sistema de tubulação. O volume encontrado, segundo o relatório técnico, foi descrito como "clinicamente perturbador".
+
+Solicito que todos os colaboradores atentem para o descarte adequado de resíduos orgânicos. Os vasos sanitários das instalações não foram projetados para suportar tal volume de material capilar.
+
+A Zeladoria já está trabalhando no desentupimento. O prazo estimado para normalização completa é de 48 horas.
+
+Atenciosamente,
+Dr. T.
+Departamento de Capital Humano`;
+
+export const TEXT_EMAIL_CAMERA_COPA = `\
+De: [REMETENTE OCULTO]
+Para: barcellospsicologia@gmail.com
+
+Dr. T.,
+
+Prefiro não me identificar.
+
+Encontrei o que parece ser uma câmera escondida na copa, atrás do painel de ventilação acima da geladeira. O equipamento parece estar em operação.
+
+Fico preocupado com a possibilidade de que conversas privadas realizadas naquele espaço tenham sido gravadas. Você sabe melhor do que ninguém o que é discutido naquele ambiente.
+
+Não sei quem instalou nem para quem as gravações vão. Por isso estou te avisando a você, e não ao RH.
+
+Cuide-se.`;

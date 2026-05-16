@@ -4,6 +4,7 @@ export interface User {
   name: string;
   title: string;
   password: string;
+  email?: string;
   parentId?: string;
 }
 
@@ -14,12 +15,14 @@ export const USERS: User[] = [
     name: "Kelvin",
     title: "Chefe de Departamento de Sistemas Cinéticos",
     password: "DEFINIR",
+    email: "kelvinluizcardoso@gmail.com",
   },
   {
     id: "filipe",
     name: "Filipe",
     title: "Supervisor de Atuadores e Hidráulica",
     password: "DEFINIR",
+    email: "filipe.atuadores@ourobo.ros",
     parentId: "kelvin",
   },
   {
@@ -28,6 +31,7 @@ export const USERS: User[] = [
     name: "Juan",
     title: "Auxiliar de Calibração de Precisão",
     password: "DEFINIR",
+    email: "juanpablolopes05@gmail.com",
     parentId: "kelvin",
   },
   {
@@ -36,12 +40,14 @@ export const USERS: User[] = [
     name: "Luiza",
     title: "Chefe de Departamento de Processamento de Dados",
     password: "DEFINIR",
+    email: "luizapolidoroaguiar@gmail.com",
   },
   {
     id: "claudio",
     name: "Cláudio",
     title: "Administrador de Redes e Conectividade",
     password: "DEFINIR",
+    email: "claudio.redes@ourobo.ros",
     parentId: "luiza",
   },
   {
@@ -50,12 +56,14 @@ export const USERS: User[] = [
     name: "Thiago",
     title: "Chefe de Departamento de Capital Humano",
     password: "DEFINIR",
+    email: "barcellospsicologia@gmail.com",
   },
   {
     id: "ryze",
     name: "Ryzé",
     title: "Procurador de Acordos e Vínculos Inquebráveis",
     password: "DEFINIR",
+    email: "ryze.acordos@ourobo.ros",
   },
   {
     id: "ramon",
@@ -63,6 +71,7 @@ export const USERS: User[] = [
     name: "Ramon",
     title: "Arquiteto de Sintaxe Lógica",
     password: "DEFINIR",
+    email: "ramonspmspm@gmail.com",
     parentId: "ryze",
   },
   {
@@ -70,6 +79,7 @@ export const USERS: User[] = [
     name: "Guardião",
     title: "",
     password: "DEFINIR",
+    email: "guardiao@ourobo.ros",
   },
 ];
 

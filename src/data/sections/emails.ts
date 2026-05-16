@@ -1,6 +1,8 @@
 import type { Folder } from "@/types";
 import {
   TEXT_EMAIL_AUDIO,
+  TEXT_EMAIL_BANHEIRO,
+  TEXT_EMAIL_CAMERA_COPA,
   TEXT_EMAIL_VAZADO_1,
   TEXT_EMAIL_VAZADO_2,
   TEXT_EMAIL_VAZADO_3,
@@ -68,6 +70,19 @@ export const emails: Folder = {
           text: TEXT_EMAIL_VAZADO_4,
         },
       ],
+    },
+    {
+      type: "email",
+      id: "emails-banheiro",
+      name: "Comunicado: Incidente nos Banheiros da Unidade",
+      text: TEXT_EMAIL_BANHEIRO,
+    },
+    {
+      type: "email",
+      id: "emails-camera-copa",
+      name: "Aviso anônimo",
+      text: TEXT_EMAIL_CAMERA_COPA,
+      visibleTo: ["thiago"],
     },
   ],
 };

@@ -47,6 +47,7 @@ export const LABEL_CURRENT_PATH = "Local";
 
 // --- Folder view ---
 export const LABEL_LOCKED = "[BLOQUEADO]";
+export const LABEL_ENERGIZED = "[ENERGIZADO]";
 export const LABEL_JANITOR_GRANT = "Conceder Acesso ao Zelador";
 export const LABEL_JANITOR_REVOKE = "Revogar Acesso ao Zelador";
 export const LABEL_PROCESSING = "[ PROCESSANDO... ]";

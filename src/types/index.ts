@@ -3,6 +3,7 @@ export type ThemePalette = "green" | "amber" | "white";
 interface BaseNode {
   id: string;
   name: string;
+  icon?: string; // overrides the default type icon in menu rendering
   visibleTo?: string[]; // if non-empty, only these user IDs can see this node
   password?: string | null; // if set to a string, requires password before entering/activating/reading
 }
@@ -11,6 +12,7 @@ export interface Folder extends BaseNode {
   type: "folder";
   janitorAccess: boolean;
   isUserRoot?: string; // user ID this folder authenticates as
+  displayEmail?: string; // shown in folder header when navigated into
   children: FileNode[];
 }
 
@@ -29,6 +31,9 @@ export interface InteractableFile extends BaseNode {
   defaultState: boolean;
   oneWay?: boolean;
   activateAudio?: string; // src path — plays as a one-shot sound on activation
+  requiredPermission?: string[]; // any one of these interactable IDs must be active to interact
+  deactivateRequiresInactive?: string[]; // all of these must be inactive to allow deactivation (overrides oneWay when satisfied)
+  activateRequiresInactive?: string[]; // all of these must be inactive to allow activation
 }
 
 export interface StatusFile extends BaseNode {
@@ -51,6 +56,7 @@ export interface ImageFile extends BaseNode {
 
 export interface JanitorControlFile extends BaseNode {
   type: "janitor-control";
+  requiredPermission?: string[]; // any one of these interactable IDs must be active to interact
 }
 
 export type FileNode =

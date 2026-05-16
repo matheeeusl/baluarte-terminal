@@ -12,6 +12,7 @@ import { TerminalBrand } from "@/components/ui/TerminalBrand";
 import {
   LABEL_CHOOSE_OPTION,
   LABEL_LOCKED,
+  LABEL_ENERGIZED,
   LABEL_BACK,
   LABEL_JANITOR_GRANT,
   LABEL_JANITOR_REVOKE,
@@ -65,6 +66,24 @@ export function FolderView({ fileSystem }: Props) {
     return granted ? LABEL_JANITOR_REVOKE : LABEL_JANITOR_GRANT;
   }
 
+  function hasPermission(ids: string[]): boolean {
+    return ids.some((id) => state.interactableStates.get(id) ?? false);
+  }
+
+  function canDeactivate(node: InteractableFile): boolean {
+    if (!node.deactivateRequiresInactive) return true;
+    return node.deactivateRequiresInactive.every(
+      (id) => !(state.interactableStates.get(id) ?? true),
+    );
+  }
+
+  function canActivate(node: InteractableFile): boolean {
+    if (!node.activateRequiresInactive) return true;
+    return node.activateRequiresInactive.every(
+      (id) => !(state.interactableStates.get(id) ?? true),
+    );
+  }
+
   function isNodeLocked(node: FileNode): boolean {
     if (node.type === "folder") return !!node.password && !canAccess(node);
     return !!node.password && !s.unlockedNodes.has(node.id);
@@ -77,33 +96,54 @@ export function FolderView({ fileSystem }: Props) {
     if (node.type === "interactable") {
       const isProcessing = processing.has(node.id);
       const isActive = state.interactableStates.get(node.id) ?? node.defaultState;
+      const noPermission =
+        node.requiredPermission !== undefined && !hasPermission(node.requiredPermission);
+      const blockedDeactivate =
+        isActive && node.oneWay === true && !!node.deactivateRequiresInactive && !canDeactivate(node);
+      const oneWayLocked =
+        isActive && node.oneWay === true && !node.deactivateRequiresInactive;
+      const blockedActivate =
+        !isActive && !!node.activateRequiresInactive && !canActivate(node);
+
+      let label = isProcessing ? LABEL_PROCESSING : interactableLabel(node) + lockSuffix;
+      if (!isProcessing && noPermission) label += " [SEM PERMISSÃO]";
+      else if (!isProcessing && blockedDeactivate) label += " [BLOQUEADO]";
+      else if (!isProcessing && blockedActivate) label += ` ${LABEL_ENERGIZED}`;
+
       return {
         id: node.id,
-        label: isProcessing ? LABEL_PROCESSING : interactableLabel(node) + lockSuffix,
-        icon: ICONS.interactable,
-        disabled: isProcessing || (node.oneWay === true && isActive),
+        label,
+        icon: node.icon ?? ICONS.interactable,
+        disabled: isProcessing || noPermission || blockedDeactivate || oneWayLocked || blockedActivate,
       };
     }
     if (node.type === "janitor-control") {
       const isProcessing = processing.has(node.id);
+      const noPermission =
+        node.requiredPermission !== undefined && !hasPermission(node.requiredPermission);
+      let label = isProcessing ? LABEL_PROCESSING : janitorControlLabel() + lockSuffix;
+      if (!isProcessing && noPermission) label += " [SEM PERMISSÃO]";
       return {
         id: node.id,
-        label: isProcessing ? LABEL_PROCESSING : janitorControlLabel() + lockSuffix,
-        icon: ICONS["janitor-control"],
-        disabled: isProcessing,
+        label,
+        icon: node.icon ?? ICONS["janitor-control"],
+        disabled: isProcessing || noPermission,
       };
     }
     return {
       id: node.id,
       label: node.name + lockSuffix,
-      icon: ICONS[node.type],
+      icon: node.icon ?? ICONS[node.type],
       disabled: false,
     };
   }
 
   function executeNodeAction(node: FileNode) {
     if (node.type === "interactable") {
+      if (node.requiredPermission && !hasPermission(node.requiredPermission)) return;
       const currentlyActive = state.interactableStates.get(node.id) ?? node.defaultState;
+      if (!currentlyActive && node.activateRequiresInactive && !canActivate(node)) return;
+      if (currentlyActive && node.deactivateRequiresInactive && !canDeactivate(node)) return;
       withProcessing(node.id, () => {
         dispatch({ type: "TOGGLE_INTERACTABLE", fileId: node.id });
         if (!currentlyActive && node.activateAudio) {
@@ -113,6 +153,7 @@ export function FolderView({ fileSystem }: Props) {
       return;
     }
     if (node.type === "janitor-control") {
+      if (node.requiredPermission && !hasPermission(node.requiredPermission)) return;
       const granted = state.janitorOverrides.get(currentFolder.id) ?? currentFolder.janitorAccess;
       withProcessing(node.id, () =>
         dispatch({
@@ -187,6 +228,11 @@ export function FolderView({ fileSystem }: Props) {
         <TerminalBrand />
       </h1>
       <StatusBlock currentPath={formatPath(pathStack)} />
+      {currentFolder.displayEmail && (
+        <p className="text-sm text-(--color-muted)">
+          📧 {currentFolder.displayEmail}
+        </p>
+      )}
 
       {interactables.length > 0 && (
         <div className="text-sm text-(--color-fg) space-y-0.5">

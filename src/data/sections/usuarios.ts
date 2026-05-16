@@ -141,6 +141,7 @@ function makeUserFolder(
 
   return {
     type: "folder",
+    icon: "👤",
     id: `user-${userId}`,
     name: user.displayId ?? user.name,
     password: user.password,
@@ -153,6 +154,7 @@ function makeUserFolder(
         name: "Emails",
         password: null,
         janitorAccess: false,
+        displayEmail: user.email,
         children: [...emails.children],
       },
       setores,
@@ -168,9 +170,42 @@ export const usuarios: Folder = {
   password: null,
   janitorAccess: false,
   children: [
-    makeUserFolder("kelvin", [audiosIndenizacao, documentos]),
+    makeUserFolder("kelvin", [
+      {
+        type: "interactable",
+        id: "permit-drones",
+        name: "Permitir acesso aos drones",
+        label: "Acesso aos Drones",
+        activeLabel: "Acesso aos Drones [CONCEDIDO]",
+        inactiveLabel: "Acesso aos Drones [NEGADO]",
+        defaultState: false,
+      },
+      {
+        type: "status",
+        id: "kelvin-declaracao-publica",
+        name: "Declaração Pública — Sala Secreta",
+        text: "Para o Auxiliar de Calibração de Precisão,\n\nQue a distância entre as nossas paredes\njamais supere a distância entre os nossos corações.\n\nMeu equipamento principal sempre será você,\nDom J., minha calibração mais precisa.\n\n— Big K.",
+      },
+      audiosIndenizacao,
+      documentos,
+    ]),
     makeUserFolder("filipe"),
     makeUserFolder("juan", [
+      {
+        type: "interactable",
+        id: "permit-drones",
+        name: "Permitir acesso aos drones",
+        label: "Acesso aos Drones",
+        activeLabel: "Acesso aos Drones [CONCEDIDO]",
+        inactiveLabel: "Acesso aos Drones [NEGADO]",
+        defaultState: false,
+      },
+      {
+        type: "status",
+        id: "juan-declaracao-publica",
+        name: "Declaração Pública — Sala Secreta",
+        text: "Para o Chefe de Sistemas Cinéticos,\n\nVocê é o sistema que nunca falha,\no motor que nunca para,\na única variável que eu não quero eliminar.\n\nBig K., minha equação favorita.\n\n— Dom J.",
+      },
       {
         type: "status",
         id: "juan-poema-1",
@@ -184,7 +219,25 @@ export const usuarios: Folder = {
         text: "Big K., minha luz e minha escuridão, \nEm teus códigos me enredei, \nMas em teus olhos me libertei, \nMeu chefe, meu mentor, meu rei.",
       },
     ]),
-    makeUserFolder("luiza"),
+    makeUserFolder("luiza", [
+      {
+        type: "interactable",
+        id: "user-luiza-permit-zelador",
+        name: "Permitir acesso ao controle do zelador",
+        label: "Acesso ao Controle do Zelador",
+        activeLabel: "Acesso ao Controle do Zelador [CONCEDIDO]",
+        inactiveLabel: "Acesso ao Controle do Zelador [NEGADO]",
+        defaultState: false,
+      },
+      {
+        type: "folder",
+        id: "user-luiza-audios",
+        name: "Áudios",
+        password: null,
+        janitorAccess: false,
+        children: [],
+      },
+    ]),
     makeUserFolder("claudio"),
     makeUserFolder("thiago", [
       {
@@ -219,12 +272,6 @@ export const usuarios: Folder = {
       },
       {
         type: "status",
-        id: "thiago-status-4",
-        name: "Notas sobre o Dr. T.",
-        text: "O Dr. T. é o chefe de capital humano, então ele é quem define as regras de acesso dos funcionários. Ele tem um comportamento meio estranho, às vezes parece que ele sabe mais do que deveria sobre o que acontece na empresa.",
-      },
-      {
-        type: "status",
         id: "thiago-status-5",
         name: "Notas sobre o Ryzé",
         text: "O Ryzé é o procurador de acordos e vínculos inquebráveis, então ele é quem cuida dos contratos da empresa. Ele é muito reservado, não sei quase nada sobre ele.",
@@ -243,7 +290,17 @@ export const usuarios: Folder = {
       },
     ]),
     makeUserFolder("ryze"),
-    makeUserFolder("ramon"),
+    makeUserFolder("ramon", [
+      {
+        type: "interactable",
+        id: "user-ramon-permit-runas",
+        name: "Permitir acesso ao controle das runas",
+        label: "Acesso ao Controle das Runas",
+        activeLabel: "Acesso ao Controle das Runas [CONCEDIDO]",
+        inactiveLabel: "Acesso ao Controle das Runas [NEGADO]",
+        defaultState: false,
+      },
+    ]),
     makeUserFolder("guardiao"),
   ],
 };
