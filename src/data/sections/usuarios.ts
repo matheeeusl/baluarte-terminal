@@ -183,8 +183,8 @@ export const usuarios: Folder = {
       {
         type: "status",
         id: "kelvin-declaracao-publica",
-        name: "Declaração Pública — Sala Secreta",
-        text: "Para o Auxiliar de Calibração de Precisão,\n\nQue a distância entre as nossas paredes\njamais supere a distância entre os nossos corações.\n\nMeu equipamento principal sempre será você,\nDom J., minha calibração mais precisa.\n\n— Big K.",
+        name: "Para o Auxiliar de Calibração de Precisão",
+        text: "Que a distância entre as nossas paredes\njamais supere a distância entre os nossos corações.\n\nMeu equipamento principal sempre será você,\nDom J., minha calibração mais precisa.\n\n— Big K.",
       },
       audiosIndenizacao,
       documentos,
@@ -203,8 +203,8 @@ export const usuarios: Folder = {
       {
         type: "status",
         id: "juan-declaracao-publica",
-        name: "Declaração Pública — Sala Secreta",
-        text: "Para o Chefe de Sistemas Cinéticos,\n\nVocê é o sistema que nunca falha,\no motor que nunca para,\na única variável que eu não quero eliminar.\n\nBig K., minha equação favorita.\n\n— Dom J.",
+        name: "Para o Chefe de Sistemas Cinéticos",
+        text: "Você é o sistema que nunca falha,\no motor que nunca para,\na única variável que eu não quero eliminar.\n\nBig K., minha equação favorita.\n\n— Dom J.",
       },
       {
         type: "status",
@@ -286,7 +286,7 @@ export const usuarios: Folder = {
         type: "status",
         id: "thiago-status-2",
         name: "Notas sobre o Guardião",
-        text: ".",
+        text: "[DELETADO]",
       },
     ]),
     makeUserFolder("ryze"),

@@ -59,7 +59,7 @@ export const emails: Folder = {
       type: "folder",
       id: "emails-pecas",
       name: "RE: Relatório de peças danificadas / Revisão de Orçamento Urgente",
-      password: "Ks2J",
+      password: "DEFINIR",
       janitorAccess: false,
       visibleTo: ["kelvin", "juan"],
       children: [

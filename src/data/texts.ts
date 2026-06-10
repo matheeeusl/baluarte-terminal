@@ -142,6 +142,6 @@ Encontrei o que parece ser uma câmera escondida na copa, atrás do painel de ve
 
 Fico preocupado com a possibilidade de que conversas privadas realizadas naquele espaço tenham sido gravadas. Você sabe melhor do que ninguém o que é discutido naquele ambiente.
 
-Não sei quem instalou nem para quem as gravações vão. Por isso estou te avisando a você, e não ao RH.
+Não sei quem instalou nem para quem as gravações vão. Por isso estou te avisando a você diretamente, e não ao grupo geral do RH.
 
 Cuide-se.`;
