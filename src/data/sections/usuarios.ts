@@ -221,7 +221,19 @@ export const usuarios: Folder = {
         duration: 13,
       },
     ]),
-    makeUserFolder("claudio"),
+    makeUserFolder("claudio", [
+      {
+        type: "interactable",
+        id: "claudio-gaveta",
+        name: "Gaveta",
+        label: "Gaveta",
+        activeLabel: "Gaveta Liberada",
+        inactiveLabel: "Gaveta",
+        defaultState: false,
+        oneWay: true,
+        password: "2103",
+      },
+    ]),
     makeUserFolder("thiago", [
       {
         type: "status",
