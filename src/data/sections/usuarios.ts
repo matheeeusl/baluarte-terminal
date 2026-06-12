@@ -223,6 +223,12 @@ export const usuarios: Folder = {
     ]),
     makeUserFolder("claudio", [
       {
+        type: "status",
+        id: "claudio-nota-desenho",
+        name: "Nota",
+        text: "Guardei o desenho da minha filha na mesa para dar inspiração para o trabalho.",
+      },
+      {
         type: "interactable",
         id: "claudio-gaveta",
         name: "Gaveta",

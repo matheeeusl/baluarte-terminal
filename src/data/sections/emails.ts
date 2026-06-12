@@ -99,5 +99,12 @@ export const emails: Folder = {
         duration: 285,
       },
     },
+    {
+      type: "email",
+      id: "luiza-email-claudio-cartao",
+      name: "Cartão de acesso",
+      text: "De: claudio.redes@ourobo.ros\nPara: luizapolidoroaguiar@gmail.com\n\nLuiza,\n\nTudo bem? Queria só confirmar que vou ficar com o seu cartão de acesso enquanto você está de férias.\n\nQualquer coisa que precisar aqui dentro, pode contar comigo. Boa viagem e descansa bastante.\n\nAbraço,\nCláudio",
+      visibleTo: ["luiza"],
+    },
   ],
 };

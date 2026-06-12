@@ -132,7 +132,7 @@ Departamento de Capital Humano`;
 
 export const TEXT_EMAIL_CLAUDIO_FILIPE = `\
 De: claudio.redes@ourobo.ros
-Para: filipe.atuadores@ourobo.ros
+Para: filipe.automacao@ourobo.ros
 
 Filipe,
 

@@ -22,7 +22,7 @@ export const USERS: User[] = [
     name: "Filipe",
     title: "Supervisor de Atuadores e Hidráulica",
     password: "Filipe13",
-    email: "filipe.atuadores@ourobo.ros",
+    email: "filipe.automacao@ourobo.ros",
     parentId: "kelvin",
   },
   {

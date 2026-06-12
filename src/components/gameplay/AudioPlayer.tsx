@@ -18,15 +18,26 @@ interface AudioPlayerProps {
 
 export function AudioPlayer({ file, onStop, autoPlay = false }: AudioPlayerProps) {
   const [playing, setPlaying] = useState(false);
+  const [loaded, setLoaded] = useState(false);
   const [elapsed, setElapsed] = useState(0);
   const howlRef = useRef<Howl | null>(null);
   const rafRef = useRef<number>(0);
   const progressRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    setLoaded(false);
     const howl = new Howl({
       src: [file.src],
       html5: true,
+      onload: () => {
+        setLoaded(true);
+        if (autoPlay) {
+          howl.play();
+          setPlaying(true);
+          rafRef.current = requestAnimationFrame(tick);
+        }
+      },
+      onloaderror: () => setLoaded(false),
       onend: () => {
         setPlaying(false);
         setElapsed(0);
@@ -34,12 +45,6 @@ export function AudioPlayer({ file, onStop, autoPlay = false }: AudioPlayerProps
       },
     });
     howlRef.current = howl;
-
-    if (autoPlay) {
-      howl.play();
-      setPlaying(true);
-      rafRef.current = requestAnimationFrame(tick);
-    }
 
     return () => {
       howl.unload();
@@ -93,10 +98,11 @@ export function AudioPlayer({ file, onStop, autoPlay = false }: AudioPlayerProps
         {/* Play / Pause */}
         <button
           onClick={playing ? handlePause : handlePlay}
-          className="border border-(--color-fg) px-3 py-1 text-xs hover:bg-(--color-muted)"
+          disabled={!loaded}
+          className="border border-(--color-fg) px-3 py-1 text-xs hover:bg-(--color-muted) disabled:opacity-40 disabled:cursor-not-allowed"
           aria-label={playing ? ARIA_PAUSE_AUDIO : ARIA_PLAY_AUDIO}
         >
-          {playing ? "⏸ PAUSA" : "▶ PLAY"}
+          {!loaded ? "AGUARDE..." : playing ? "⏸ PAUSA" : "▶ PLAY"}
         </button>
         {/* Stop */}
         <button
