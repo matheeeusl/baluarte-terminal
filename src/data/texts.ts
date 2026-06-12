@@ -130,6 +130,20 @@ Atenciosamente,
 Dr. T.
 Departamento de Capital Humano`;
 
+export const TEXT_EMAIL_CLAUDIO_FILIPE = `\
+De: claudio.redes@ourobo.ros
+Para: filipe.atuadores@ourobo.ros
+
+Filipe,
+
+Preciso te avisar de uma coisa.
+
+Encontrei uma gravação nossa nos logs da rede interna. Não sei quem captou nem como chegou lá, mas está circulando. Anexei o arquivo aqui para você ouvir e me dizer se reconhece o contexto.
+
+Não fala com ninguém sobre isso por enquanto. Dependendo do que você achar, a gente decide o que fazer.
+
+— Cláudio`;
+
 export const TEXT_EMAIL_CAMERA_COPA = `\
 De: [REMETENTE OCULTO]
 Para: barcellospsicologia@gmail.com

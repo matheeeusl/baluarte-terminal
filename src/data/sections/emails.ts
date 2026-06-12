@@ -3,6 +3,7 @@ import {
   TEXT_EMAIL_AUDIO,
   TEXT_EMAIL_BANHEIRO,
   TEXT_EMAIL_CAMERA_COPA,
+  TEXT_EMAIL_CLAUDIO_FILIPE,
   TEXT_EMAIL_VAZADO_1,
   TEXT_EMAIL_VAZADO_2,
   TEXT_EMAIL_VAZADO_3,
@@ -83,6 +84,20 @@ export const emails: Folder = {
       name: "Aviso anônimo",
       text: TEXT_EMAIL_CAMERA_COPA,
       visibleTo: ["thiago"],
+    },
+    {
+      type: "email",
+      id: "emails-claudio-filipe",
+      name: "Encontrei uma gravação nossa",
+      text: TEXT_EMAIL_CLAUDIO_FILIPE,
+      visibleTo: ["filipe"],
+      attachment: {
+        type: "audio",
+        id: "emails-claudio-filipe-audio",
+        name: "Áudio da nossa conversa",
+        src: audio("/assets/audio/4dm1n.wav"),
+        duration: 285,
+      },
     },
   ],
 };
