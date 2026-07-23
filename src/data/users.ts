@@ -4,6 +4,8 @@ export interface User {
   name: string;
   title: string;
   password: string;
+  income: number;
+  companyTime: number;
   email?: string;
   parentId?: string;
 }
@@ -13,8 +15,10 @@ export const USERS: User[] = [
     id: "kelvin",
     displayId: "Big K",
     name: "Kelvin",
-    title: "Chefe de Departamento de Sistemas Cinéticos",
+    title: "Diretor de Automação",
     password: "KS2J",
+    income: 24500,
+    companyTime: 9,
     email: "kelvinluizcardoso@gmail.com",
   },
   {
@@ -22,6 +26,8 @@ export const USERS: User[] = [
     name: "Filipe",
     title: "Supervisor de Atuadores e Hidráulica",
     password: "Filipe13",
+    income: 9800,
+    companyTime: 15,
     email: "filipe.automacao@ourobo.ros",
     parentId: "kelvin",
   },
@@ -31,6 +37,8 @@ export const USERS: User[] = [
     name: "Juan",
     title: "Auxiliar de Calibração de Precisão",
     password: "JS2K",
+    income: 4200,
+    companyTime: 3,
     email: "juanpablolopes05@gmail.com",
     parentId: "kelvin",
   },
@@ -40,6 +48,8 @@ export const USERS: User[] = [
     name: "Luiza",
     title: "Chefe de Departamento de Processamento de Dados",
     password: "DEFINIR",
+    income: 18700,
+    companyTime: 11,
     email: "luizapolidoroaguiar@gmail.com",
   },
   {
@@ -47,6 +57,8 @@ export const USERS: User[] = [
     name: "Cláudio",
     title: "Administrador de Redes e Conectividade",
     password: "4dm1n",
+    income: 8600,
+    companyTime: 8,
     email: "claudio.redes@ourobo.ros",
     parentId: "luiza",
   },
@@ -55,8 +67,10 @@ export const USERS: User[] = [
     displayId: "Dr. T.",
     name: "Thiago",
     title: "Chefe de Departamento de Capital Humano",
-    password: "DEFINIR",
+    password: "morgana",
     email: "barcellospsicologia@gmail.com",
+    income: 19800,
+    companyTime: 10,
   },
   {
     id: "ryze",
@@ -64,6 +78,8 @@ export const USERS: User[] = [
     title: "Procurador de Acordos e Vínculos Inquebráveis",
     password: "DEFINIR",
     email: "ryze.acordos@ourobo.ros",
+    income: 41000,
+    companyTime: 22,
   },
   {
     id: "ramon",
@@ -73,13 +89,17 @@ export const USERS: User[] = [
     password: "DEFINIR",
     email: "ramonspmspm@gmail.com",
     parentId: "ryze",
+    income: 37400,
+    companyTime: 7,
   },
   {
     id: "guardiao",
     name: "Guardião",
-    title: "",
+    title: "Guardião",
     password: "DEFINIR",
     email: "guardiao@ourobo.ros",
+    income: 14500,
+    companyTime: 0,
   },
 ];
 

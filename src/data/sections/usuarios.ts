@@ -3,6 +3,9 @@ import { setores } from "./setores";
 import { USERS } from "@/data/users";
 import { emails } from "./emails";
 import { documentos } from "./documentos";
+import { NOTES } from "../rh-texts";
+import { TEXT_DIRETRIZ_GUARDIAO } from "../texts";
+import { RELATORIO_GUARDIAO } from "../guardiao-texts";
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
 function audio(path: string) {
@@ -187,7 +190,7 @@ export const usuarios: Folder = {
       {
         type: "status",
         id: "juan-declaracao-publica",
-        name: "Para o Chefe de Sistemas Cinéticos",
+        name: "Para o Diretor de Automação",
         text: "Você é o sistema que nunca falha,\no motor que nunca para,\na única variável que eu não quero eliminar.\n\nBig K., minha equação favorita.\n\n— Dom J.",
       },
       {
@@ -245,49 +248,55 @@ export const usuarios: Folder = {
         type: "status",
         id: "thiago-status-1",
         name: "Notas sobre o Big K.",
-        text: "O Big K. tem comportamentos estranhos.",
+        text: NOTES.bigK,
       },
       {
         type: "status",
         id: "thiago-status-7",
         name: "Notas sobre o Filipe",
-        text: "O Filipe é o supervisor de atuadores e hidráulica. Ele tem história pra contar.",
+        text: NOTES.filipe,
       },
       {
         type: "status",
         id: "thiago-status-8",
         name: "Notas sobre o Juan",
-        text: "O Juan é o auxiliar de calibração de precisão. Ele é um pouco estranho, mas parece que o Big K. gosta dele.",
+        text: NOTES.juan,
       },
       {
         type: "status",
         id: "thiago-status-3",
         name: "Notas sobre a Dona L.",
-        text: "A Dona L. é a chefe de processamento de dados, mas não sei muito sobre ela.",
+        text: NOTES.donaL,
       },
       {
         type: "status",
         id: "thiago-status-9",
         name: "Notas sobre Cláudio",
-        text: "Cláudio é o supervisor de manutenção predial. Ele é muito dedicado ao trabalho.",
+        text: NOTES.claudio,
       },
       {
         type: "status",
         id: "thiago-status-5",
         name: "Notas sobre o Ryzé",
-        text: "O Ryzé é o procurador de acordos e vínculos inquebráveis, então ele é quem cuida dos contratos da empresa. Ele é muito reservado, não sei quase nada sobre ele.",
+        text: NOTES.ryze,
       },
       {
         type: "status",
         id: "thiago-status-6",
         name: "Notas sobre o Ramon",
-        text: "O Ramon é o arquiteto responsável pela construção da empresa, então ele tem acesso a todas as áreas. Nunca aparece no escritório, deve trabalhar remotamente.",
+        text: NOTES.ramon,
+      },
+      {
+        type: "status",
+        id: "thiago-status-10",
+        name: "Notas sobre [DESLIGADO]",
+        text: NOTES.helio,
       },
       {
         type: "status",
         id: "thiago-status-2",
-        name: "Notas sobre o Guardião",
-        text: "[DELETADO]",
+        name: "Notas sobre [DELETADO]",
+        text: NOTES.guardiao,
       },
     ]),
     makeUserFolder("ryze"),
@@ -302,6 +311,21 @@ export const usuarios: Folder = {
         defaultState: false,
       },
     ]),
-    makeUserFolder("guardiao"),
+    makeUserFolder("guardiao", [
+      {
+        type: "folder",
+        id: "relatorios-guardiao",
+        name: "Relatórios",
+        janitorAccess: false,
+        password: null,
+        children: [...RELATORIO_GUARDIAO],
+      },
+      {
+        type: "status",
+        id: "diretriz-guardiao",
+        name: "Diretrizes do Guardião",
+        text: TEXT_DIRETRIZ_GUARDIAO,
+      },
+    ]),
   ],
 };

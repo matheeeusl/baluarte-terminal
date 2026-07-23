@@ -1,4 +1,9 @@
-import type { Folder, InteractableFile, JanitorControlFile, StatusFile } from "@/types";
+import type {
+  Folder,
+  InteractableFile,
+  JanitorControlFile,
+  StatusFile,
+} from "@/types";
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
 function audio(path: string) {
@@ -11,15 +16,6 @@ function makeZeladorToggle(sectorId: string): JanitorControlFile {
     id: `${sectorId}-zelador`,
     name: "Conceder acesso ao Zelador",
     requiredPermission: ["user-luiza-permit-zelador"],
-  };
-}
-
-function makeMapaEstouAqui(id: string): StatusFile {
-  return {
-    type: "status",
-    id: `${id}-mapa`,
-    name: "Mapa: Estou Aqui",
-    text: "[MAPA DE LOCALIZAÇÃO — ARQUIVO NÃO DISPONÍVEL]",
   };
 }
 
@@ -116,10 +112,7 @@ const setor3: Folder = {
       name: "Departamento de RH",
       password: null,
       janitorAccess: false,
-      children: [
-        makeMapaEstouAqui("setores-setor-3-rh"),
-        makeZeladorToggle("setores-setor-3-rh"),
-      ],
+      children: [makeZeladorToggle("setores-setor-3-rh")],
     },
     {
       type: "folder",
@@ -128,7 +121,6 @@ const setor3: Folder = {
       password: null,
       janitorAccess: false,
       children: [
-        makeMapaEstouAqui("setores-setor-3-zeladoria"),
         makeZeladorToggle("setores-setor-3-zeladoria"),
         makeSobreDocumento(
           "setores-setor-3-zeladoria",
@@ -143,7 +135,6 @@ const setor3: Folder = {
       password: null,
       janitorAccess: false,
       children: [
-        makeMapaEstouAqui("setores-setor-3-enfermaria"),
         makeZeladorToggle("setores-setor-3-enfermaria"),
         makeSobreDocumento(
           "setores-setor-3-enfermaria",
@@ -158,7 +149,6 @@ const setor3: Folder = {
       password: null,
       janitorAccess: false,
       children: [
-        makeMapaEstouAqui("setores-setor-3-financeiro"),
         makeZeladorToggle("setores-setor-3-financeiro"),
         makeSobreDocumento(
           "setores-setor-3-financeiro",
@@ -173,7 +163,6 @@ const setor3: Folder = {
       password: null,
       janitorAccess: false,
       children: [
-        makeMapaEstouAqui("setores-setor-3-acordos"),
         makeZeladorToggle("setores-setor-3-acordos"),
         makeSobreDocumento(
           "setores-setor-3-acordos",
@@ -200,7 +189,6 @@ const setor4: Folder = {
       password: null,
       janitorAccess: false,
       children: [
-        makeMapaEstouAqui("setores-setor-4-ti"),
         makeZeladorToggle("setores-setor-4-ti"),
         makeSobreDocumento(
           "setores-setor-4-ti",
@@ -260,7 +248,6 @@ const setor4: Folder = {
       password: null,
       janitorAccess: false,
       children: [
-        makeMapaEstouAqui("setores-setor-4-automacao"),
         makeZeladorToggle("setores-setor-4-automacao"),
         makeSobreDocumento(
           "setores-setor-4-automacao",

@@ -39,10 +39,10 @@ All game logic lives in `GameReducer.ts` as a pure reducer. Every player action 
 BOOT → GUEST / AUTHENTICATED
 ```
 
-| Phase           | Description                                                          |
-| --------------- | -------------------------------------------------------------------- |
-| `BOOT`          | 1.5 s loading screen on every power-on                               |
-| `GUEST`         | Default after boot — only public folders visible                     |
+| Phase           | Description                                                                 |
+| --------------- | --------------------------------------------------------------------------- |
+| `BOOT`          | 1.5 s loading screen on every power-on                                      |
+| `GUEST`         | Default after boot — only public folders visible                            |
 | `AUTHENTICATED` | A user folder was unlocked — `currentUser` set, personal content accessible |
 
 ### Authentication
@@ -72,7 +72,7 @@ Each `Folder` has a `janitorAccess: boolean` flag. `useJanitorActive` walks from
 interface BaseNode {
   id: string;
   name: string;
-  visibleTo?: string[];   // if non-empty, only listed user IDs can see this node
+  visibleTo?: string[]; // if non-empty, only listed user IDs can see this node
   password?: string | null; // requires password before entering/activating/reading
 }
 
@@ -80,14 +80,14 @@ interface Folder extends BaseNode {
   type: "folder";
   password: string | null; // null = open
   janitorAccess: boolean;
-  isUserRoot?: string;     // user ID this folder logs in as
+  isUserRoot?: string; // user ID this folder logs in as
   children: FileNode[];
 }
 
 interface AudioFile extends BaseNode {
   type: "audio";
   src: string;
-  duration: number;        // seconds
+  duration: number; // seconds
   transcript?: string;
 }
 
@@ -97,19 +97,19 @@ interface InteractableFile extends BaseNode {
   activeLabel: string;
   inactiveLabel: string;
   defaultState: boolean;
-  oneWay?: boolean;        // cannot be deactivated once active
-  activateAudio?: string;  // src path — auto-plays when toggled false → true
+  oneWay?: boolean; // cannot be deactivated once active
+  activateAudio?: string; // src path — auto-plays when toggled false → true
 }
 
 interface StatusFile extends BaseNode {
   type: "status";
-  text: string;            // whitespace-pre-wrap
+  text: string; // whitespace-pre-wrap
 }
 
 interface EmailFile extends BaseNode {
   type: "email";
-  text: string;            // email body
-  attachment?: AudioFile;  // shown as clickable button below the text
+  text: string; // email body
+  attachment?: AudioFile; // shown as clickable button below the text
 }
 
 interface ImageFile extends BaseNode {
@@ -141,7 +141,7 @@ Folder structure mirrors hierarchy: subordinates are nested inside their superio
 
 ```
 Usuários/
-├── Big K (Kelvin) — Chefe de Sistemas Cinéticos
+├── Big K (Kelvin) — Diretor de Automação
 │   ├── Filipe — Supervisor de Atuadores e Hidráulica
 │   └── Dom J. (Juan) — Auxiliar de Calibração de Precisão
 ├── Dona L. (Luiza) — Chefe de Processamento de Dados
@@ -261,12 +261,12 @@ public/
 
 ## Keyboard Navigation
 
-| Key         | Action                                                   |
-| ----------- | -------------------------------------------------------- |
-| `↑` / `↓`   | Navigate menu items (works even while typing password)   |
-| `Enter`     | Select / confirm                                         |
-| `Backspace` | Go back one level                                        |
-| `Escape`    | Cancel password input                                    |
+| Key         | Action                                                 |
+| ----------- | ------------------------------------------------------ |
+| `↑` / `↓`   | Navigate menu items (works even while typing password) |
+| `Enter`     | Select / confirm                                       |
+| `Backspace` | Go back one level                                      |
+| `Escape`    | Cancel password input                                  |
 
 ---
 

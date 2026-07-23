@@ -27,6 +27,27 @@ Agora usamos:
 
   §4º - PRESUNÇÃO DE CULPA EXCLUSIVA: Qualquer sintoma de envenenamento radioativo agudo (Síndrome de Radiação Aguda - SRA) será juridicamente interpretado como CULPA EXCLUSIVA DA VÍTIMA, por falha em manter a distância de segurança de 5 metros.`;
 
+export const TEXT_DIRETRIZ_GUARDIAO = `\
+
+Você foi designado para a função de Guardião do Baluarte. Esta posição é de extrema importância para a segurança e integridade das operações da OUROBOROS DEFENSE SYSTEMS.
+Como Guardião, você terá responsabilidades críticas que exigem atenção constante e cumprimento rigoroso das diretrizes estabelecidas.
+Esse cargo é vitalício e garante uma vida de conforto para você e sua família, mas também exige um compromisso inabalável com a segurança do Baluarte.
+
+As suas principais responsabilidades incluem:
+
+§1º - Você deve manter a vigilância constante sobre todas as operações do Baluarte, garantindo que os protocolos de segurança sejam rigorosamente seguidos.
+
+§2º - É de sua responsabilidade identificar e resolver qualquer atividade suspeita ou não autorizada, incluindo tentativas de acesso não autorizado aos sistemas internos.
+
+§3º - Em caso de incidentes de segurança, você deve identificar os incidentes para mitigar riscos e restaurar a integridade do sistema.
+
+§4º - Você deve manter registros de todas as atividades de monitoramento e relatórios de incidentes, garantindo a rastreabilidade e a conformidade com as normas internas.
+
+§5º - A sua função é vital para a proteção do Baluarte e dos dados sensíveis, devendo agir com diligencia, discrição e integridade em todas as situações.
+
+A OUROBOROS DEFENSE SYSTEMS confia na sua dedicação e competência para desempenhar essa função com excelência.
+O Baluarte deve seguir sua função até o dia esperado. Por qualquer meio necessário.
+`;
 export const TEXT_EMAIL_VAZADO_1 = `\
 De: ofertas.sigilosas.saude@promocoesweb.com
 Para: kelvinluizcardoso@gmail.com
