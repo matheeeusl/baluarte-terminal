@@ -299,7 +299,18 @@ export const usuarios: Folder = {
         text: NOTES.guardiao,
       },
     ]),
-    makeUserFolder("ryze"),
+    makeUserFolder("ryze", [
+      {
+        type: "interactable",
+        id: "ryze-cofre",
+        name: "Cofre",
+        label: "Cofre",
+        activeLabel: "Cofre Liberado",
+        inactiveLabel: "Cofre",
+        defaultState: false,
+        oneWay: true,
+      },
+    ]),
     makeUserFolder("ramon", [
       {
         type: "interactable",
