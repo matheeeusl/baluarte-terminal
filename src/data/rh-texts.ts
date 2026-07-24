@@ -107,11 +107,11 @@ Salário | $${getUserIncome("guardiao")}
 Cargo | ${getUserTitle("guardiao")}
 Tempo Empresa | ${getUserCompanyTime("guardiao")}
 
-- O [DELETADO] é o primeiro guardião.
+- O ████████ é o primeiro guardião.
 - Esse trabalho tem algo a ver com a segurança da empresa, mas não sei exatamente o que ele faz.
 - Parece que é um emprego vitalício e pelos boatos até hereditário.
-- A empresa vai pagar o salário para a família do [DELETADO] durante muito tempo.
-- Todos ficaram felizes com a escolha do [DELETADO] para o cargo, menos o Ramon.
-- O [DELETADO] reclama do Ramon, porque parece que tem a vida mais fácil.
+- A empresa vai pagar o salário para a família do ████████ durante muito tempo.
+- Todos ficaram felizes com a escolha do ████████ para o cargo, menos o Ramon.
+- O ████████ reclama do Ramon, porque parece que tem a vida mais fácil.
 `,
 };

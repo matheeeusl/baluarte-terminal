@@ -5,7 +5,7 @@ import { emails } from "./emails";
 import { documentos } from "./documentos";
 import { NOTES } from "../rh-texts";
 import { TEXT_DIRETRIZ_GUARDIAO } from "../texts";
-import { RELATORIO_GUARDIAO } from "../guardiao-texts";
+import { RELATORIOS_GUARDIAO } from "../guardiao-texts";
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
 function audio(path: string) {
@@ -295,7 +295,7 @@ export const usuarios: Folder = {
       {
         type: "status",
         id: "thiago-status-2",
-        name: "Notas sobre [DELETADO]",
+        name: "Notas sobre ████████",
         text: NOTES.guardiao,
       },
     ]),
@@ -318,7 +318,7 @@ export const usuarios: Folder = {
         name: "Relatórios",
         janitorAccess: false,
         password: null,
-        children: [...RELATORIO_GUARDIAO],
+        children: RELATORIOS_GUARDIAO,
       },
       {
         type: "status",
