@@ -1,3 +1,4 @@
+import { FileNode } from "@/types";
 import { getUserById } from "./users";
 
 const getUserIncome = (id: string) => getUserById(id)?.income ?? 0;
@@ -116,3 +117,60 @@ Tempo Empresa | ${getUserCompanyTime("guardiao")}
 - O ████████ reclama do Ramon, porque parece que tem a vida mais fácil.
 `,
 };
+
+export const NOTES_RH: FileNode[] = [
+  {
+    type: "status",
+    id: "thiago-status-1",
+    name: "Notas sobre o Big K.",
+    text: NOTES.bigK,
+  },
+  {
+    type: "status",
+    id: "thiago-status-2",
+    name: "Notas sobre o Filipe",
+    text: NOTES.filipe,
+  },
+  {
+    type: "status",
+    id: "thiago-status-3",
+    name: "Notas sobre o Juan",
+    text: NOTES.juan,
+  },
+  {
+    type: "status",
+    id: "thiago-status-4",
+    name: "Notas sobre a Dona L.",
+    text: NOTES.donaL,
+  },
+  {
+    type: "status",
+    id: "thiago-status-5",
+    name: "Notas sobre Cláudio",
+    text: NOTES.claudio,
+  },
+  {
+    type: "status",
+    id: "thiago-status-6",
+    name: "Notas sobre o Ryzé",
+    text: NOTES.ryze,
+  },
+  {
+    type: "status",
+    id: "thiago-status-7",
+    name: "Notas sobre o Ramon",
+    text: NOTES.ramon,
+  },
+  {
+    type: "status",
+    id: "thiago-status-8",
+    name: "Notas sobre [DESLIGADO]",
+    text: NOTES.helio,
+  },
+  {
+    type: "status",
+    id: "thiago-status-9",
+    name: "Notas sobre ████████",
+    text: NOTES.guardiao,
+  },
+];

@@ -3,7 +3,7 @@ import { setores } from "./setores";
 import { USERS } from "@/data/users";
 import { emails } from "./emails";
 import { documentos } from "./documentos";
-import { NOTES } from "../rh-texts";
+import { NOTES_RH } from "../rh-texts";
 import { TEXT_DIRETRIZ_GUARDIAO } from "../texts";
 import { RELATORIOS_GUARDIAO } from "../guardiao-texts";
 
@@ -243,62 +243,7 @@ export const usuarios: Folder = {
         password: "2103",
       },
     ]),
-    makeUserFolder("thiago", [
-      {
-        type: "status",
-        id: "thiago-status-1",
-        name: "Notas sobre o Big K.",
-        text: NOTES.bigK,
-      },
-      {
-        type: "status",
-        id: "thiago-status-7",
-        name: "Notas sobre o Filipe",
-        text: NOTES.filipe,
-      },
-      {
-        type: "status",
-        id: "thiago-status-8",
-        name: "Notas sobre o Juan",
-        text: NOTES.juan,
-      },
-      {
-        type: "status",
-        id: "thiago-status-3",
-        name: "Notas sobre a Dona L.",
-        text: NOTES.donaL,
-      },
-      {
-        type: "status",
-        id: "thiago-status-9",
-        name: "Notas sobre Cláudio",
-        text: NOTES.claudio,
-      },
-      {
-        type: "status",
-        id: "thiago-status-5",
-        name: "Notas sobre o Ryzé",
-        text: NOTES.ryze,
-      },
-      {
-        type: "status",
-        id: "thiago-status-6",
-        name: "Notas sobre o Ramon",
-        text: NOTES.ramon,
-      },
-      {
-        type: "status",
-        id: "thiago-status-10",
-        name: "Notas sobre [DESLIGADO]",
-        text: NOTES.helio,
-      },
-      {
-        type: "status",
-        id: "thiago-status-2",
-        name: "Notas sobre ████████",
-        text: NOTES.guardiao,
-      },
-    ]),
+    makeUserFolder("thiago", NOTES_RH),
     makeUserFolder("ryze", [
       {
         type: "interactable",
