@@ -34,7 +34,7 @@ const setor1: Folder = {
   type: "folder",
   id: "setores-setor-1",
   name: "Setor 1",
-  password: "DEFINIR",
+  password: "4rkh4m",
   janitorAccess: false,
   children: [
     {
@@ -47,7 +47,7 @@ const setor1: Folder = {
       defaultState: false,
       oneWay: true,
       activateAudio: audio("/assets/audio/interface/warning_sound.wav"),
-      password: "DEFINIR",
+      password: "4br1r",
       activateRequiresInactive: [
         "setores-setor-1-runa-2",
         "setores-setor-2-energia-runa-1",
@@ -72,7 +72,7 @@ const setor2: Folder = {
   type: "folder",
   id: "setores-setor-2",
   name: "Setor 2",
-  password: "DEFINIR",
+  password: "r3dbu11",
   janitorAccess: false,
   children: [
     {

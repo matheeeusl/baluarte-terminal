@@ -64,6 +64,7 @@ Tempo Empresa | ${getUserCompanyTime("claudio")}
 - Vive de fofoquinha com o Filipe, sempre vejo eles na copa conversando.
 - Ele sempre trás a filha para o trabalho, vive desenhando coisas na mesa dele, deixando os desenhos espalhados pela empresa inteira.
 - Ele é muito dedicado ao trabalho, mas vive reclamando da Luíza e do Kelvin, parece que eles não dão valor ao trabalho dele.
+- Ele quem criou e gerencia as senhas dos setores mais internos.
 - Reclama do Ramon, porque ele nunca aparece na empresa, mas ganha muito bem.
   `,
   ryze: `\

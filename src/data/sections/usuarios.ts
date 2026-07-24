@@ -310,6 +310,17 @@ export const usuarios: Folder = {
         inactiveLabel: "Acesso ao Controle das Runas [NEGADO]",
         defaultState: false,
       },
+      {
+        type: "interactable",
+        id: "ramon-cofre",
+        name: "Cofre",
+        label: "Cofre",
+        activeLabel: "Cofre Liberado",
+        inactiveLabel: "Cofre",
+        defaultState: false,
+        oneWay: true,
+        password: "caixinha",
+      },
     ]),
     makeUserFolder("guardiao", [
       {
