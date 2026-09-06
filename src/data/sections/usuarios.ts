@@ -2,7 +2,7 @@ import type { FileNode, Folder } from "@/types";
 import { setores } from "./setores";
 import { USERS } from "@/data/users";
 import { emails } from "./emails";
-import { documentos } from "./documentos";
+import { documentosKelvin } from "./documentos";
 import { NOTES_RH } from "../rh-texts";
 import { TEXT_DIRETRIZ_GUARDIAO } from "../texts";
 import { RELATORIOS_GUARDIAO } from "../guardiao-texts";
@@ -24,7 +24,7 @@ const audiosIndenizacao: Folder = {
       type: "folder",
       id: "documentos-mensagens-culpado",
       name: "Acho que sei quem foi o Culpado",
-      password: "DEFINIR",
+      password: "KS2J",
       janitorAccess: false,
       children: [
         {
@@ -40,7 +40,7 @@ const audiosIndenizacao: Folder = {
       type: "folder",
       id: "documentos-mensagens-tarde",
       name: "Chegando Tarde",
-      password: "DEFINIR",
+      password: "KS2J",
       janitorAccess: false,
       children: [
         {
@@ -56,7 +56,7 @@ const audiosIndenizacao: Folder = {
       type: "folder",
       id: "documentos-mensagens-churras",
       name: "Churras",
-      password: "DEFINIR",
+      password: "KS2J",
       janitorAccess: false,
       children: [
         {
@@ -72,7 +72,7 @@ const audiosIndenizacao: Folder = {
       type: "folder",
       id: "documentos-mensagens-pesames",
       name: "Pêsames",
-      password: "DEFINIR",
+      password: "KS2J",
       janitorAccess: false,
       children: [
         {
@@ -174,7 +174,7 @@ export const usuarios: Folder = {
         text: "Que a distância entre as nossas paredes\njamais supere a distância entre os nossos corações.\n\nMeu equipamento principal sempre será você,\nDom J., minha calibração mais precisa.\n\n— Big K.",
       },
       audiosIndenizacao,
-      documentos,
+      documentosKelvin,
     ]),
     makeUserFolder("filipe"),
     makeUserFolder("juan", [

@@ -5,7 +5,7 @@ function audio(path: string) {
   return `${BASE}${path}`;
 }
 
-export const documentos: Folder = {
+export const documentosKelvin: Folder = {
   type: "folder",
   id: "documentos",
   name: "Gravações",
@@ -48,7 +48,7 @@ export const documentos: Folder = {
       type: "folder",
       id: "documentos-gravacoes-c4m1s4",
       name: "C4m1s4",
-      password: "DEFINIR",
+      password: "JS2K",
       janitorAccess: false,
       children: [
         {
@@ -64,7 +64,7 @@ export const documentos: Folder = {
       type: "folder",
       id: "documentos-gravacoes-gh0s7",
       name: "Gh0s7",
-      password: "DEFINIR",
+      password: "JS2K",
       janitorAccess: false,
       children: [
         {
