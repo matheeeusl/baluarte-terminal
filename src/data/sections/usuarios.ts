@@ -275,7 +275,8 @@ export const usuarios: Folder = {
         inactiveLabel: "Cofre",
         defaultState: false,
         oneWay: true,
-        password: "caixinha",
+        activateAudio: audio("/assets/audio/interface/morse-ramon.wav"),
+        password: "4qu1l0",
       },
     ]),
     makeUserFolder("guardiao", [
