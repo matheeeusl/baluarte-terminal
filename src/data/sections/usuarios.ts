@@ -24,7 +24,7 @@ const audiosIndenizacao: Folder = {
       type: "folder",
       id: "documentos-mensagens-culpado",
       name: "Acho que sei quem foi o Culpado",
-      password: "KS2J",
+      password: null,
       janitorAccess: false,
       children: [
         {
@@ -40,7 +40,7 @@ const audiosIndenizacao: Folder = {
       type: "folder",
       id: "documentos-mensagens-tarde",
       name: "Chegando Tarde",
-      password: "KS2J",
+      password: null,
       janitorAccess: false,
       children: [
         {
@@ -56,7 +56,7 @@ const audiosIndenizacao: Folder = {
       type: "folder",
       id: "documentos-mensagens-churras",
       name: "Churras",
-      password: "KS2J",
+      password: null,
       janitorAccess: false,
       children: [
         {
@@ -72,7 +72,7 @@ const audiosIndenizacao: Folder = {
       type: "folder",
       id: "documentos-mensagens-pesames",
       name: "Pêsames",
-      password: "KS2J",
+      password: null,
       janitorAccess: false,
       children: [
         {
@@ -122,6 +122,7 @@ const audiosIndenizacao: Folder = {
 function makeUserFolder(
   userId: string,
   extraChildren: FileNode[] = [],
+  activateAudio?: string,
 ): Folder {
   const user = USERS.find((u) => u.id === userId);
   if (!user) throw new Error(`Unknown user id: ${userId}`);
@@ -131,9 +132,10 @@ function makeUserFolder(
     icon: "👤",
     id: `user-${userId}`,
     name: user.displayId ?? user.name,
-    password: user.password,
+    password: user.password || null,
     janitorAccess: false,
     isUserRoot: userId,
+    activateAudio,
     children: [
       {
         type: "folder",
@@ -275,7 +277,6 @@ export const usuarios: Folder = {
         inactiveLabel: "Cofre",
         defaultState: false,
         oneWay: true,
-        activateAudio: audio("/assets/audio/interface/morse-ramon.wav"),
         password: "4qu1l0",
       },
     ]),

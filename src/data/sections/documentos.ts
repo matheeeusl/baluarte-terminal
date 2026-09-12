@@ -16,7 +16,7 @@ export const documentosKelvin: Folder = {
       type: "folder",
       id: "documentos-gravacoes-h17",
       name: "$h17",
-      password: "DEFINIR",
+      password: "JS2K",
       janitorAccess: false,
       children: [
         {

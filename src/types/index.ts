@@ -13,6 +13,7 @@ export interface Folder extends BaseNode {
   janitorAccess: boolean;
   isUserRoot?: string; // user ID this folder authenticates as
   displayEmail?: string; // shown in folder header when navigated into
+  activateAudio?: string; // src path — plays once on entering this exact folder, stops on leaving
   children: FileNode[];
 }
 

@@ -166,7 +166,7 @@ Não fala com ninguém sobre isso por enquanto. Dependendo do que você achar, a
 — Cláudio`;
 
 export const TEXT_EMAIL_CAMERA_COPA = `\
-De: [REMETENTE OCULTO]
+De: ████████████████
 Para: barcellospsicologia@gmail.com
 
 Dr. T.,
@@ -180,3 +180,47 @@ Fico preocupado com a possibilidade de que conversas privadas realizadas naquele
 Não sei quem instalou nem para quem as gravações vão. Por isso estou te avisando a você diretamente, e não ao grupo geral do RH.
 
 Cuide-se.`;
+
+export const TEXT_EMAIL_RAMON = `\
+De: ryze.acordos@ourobo.ros
+Para: ramonspmspm@gmail.com
+
+Poderosissímo Ramon, tecnomante, filho do éter.
+✨ ~~Hocus Pocus!~~ ✨
+Confesso que hoje minha mente está ocupada com assuntos muito mais importantes que a magia.🍖
+✨ ~~Alakazam!~~ ✨
+Há horas não encontro um banquete digno de um verdadeiro mestre dos arcanos.🍽️
+✨ ~~Presto!~~ ✨
+Um pouco de pão, talvez... uma boa carne... algo doce para acompanhar. Não há grande feitiço que se sustente de estômago vazio.🍗
+✨ ~~Voilà!~~ ✨
+Depois de anos estudando os pergaminhos ancestrais, descobri que até a fome pode ser uma poderosa fonte de energia mágica.📖
+✨ ~~Shazam!~~ ✨
+Mas não deixe que minha... fome o distraia. Preparei um pequeno encantamento e enviei tudo em um áudio. Escute com atenção.⚡
+Que os véus se abram, que a magia flua... e que o caminho o leve ██ ██████
+✨ ~~Bibbidi-bobbidi-boo!~~ ✨
+                    🤤 E, se encontrar alguma comida no caminho, traga um pouco para mim. 🤤
+
+Ryze
+🧙‍♂️ Arquimago da Ordem de Hermes
+`;
+
+export const TEXT_EMAIL_PAGAMENTO_EFETUADO = `\
+De: contato@padariadoisirmaos.com.br
+Para: kelvinluizcardoso@gmail.com
+
+Olá,
+
+Um pagamento foi efetuado em seu nome. O valor de R$ 1,00 foi devidamente creditado na conta da Padaria Dois Irmãos.
+
+Agradecemos pela confiança e preferência. Esperamos que continue desfrutando de nossos produtos e serviços.
+
+Como sempre, permanecemos à disposição para quaisquer necessidades futuras.
+
+Conforme solicitado, segue em anexo o áudio.
+
+Atenciosamente,
+
+Equipe da Padaria Dois Irmãos
+-
+Este é um e-mail automático. Por favor, não responda a esta mensagem.
+-`;
