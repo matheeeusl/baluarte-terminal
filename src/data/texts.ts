@@ -201,7 +201,7 @@ Que os véus se abram, que a magia flua... e que o caminho o leve ██ ██�
                     🤤 E, se encontrar alguma comida no caminho, traga um pouco para mim. 🤤
 
 Ryze
-🧙‍♂️ Arquimago da Ordem de Hermes
+🧙‍♂️ Arquimago da Irmandade Akasha
 `;
 
 export const TEXT_EMAIL_PAGAMENTO_EFETUADO = `\
